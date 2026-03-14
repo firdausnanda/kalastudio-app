@@ -26,11 +26,11 @@ class SocialiteController extends Controller
         }
 
         $user = User::updateOrCreate([
-            'google_id' => $googleUser->id,
+            'google_id' => $googleUser->getId(),
         ], [
-            'name' => $googleUser->name,
-            'email' => $googleUser->email,
-            'avatar' => $googleUser->avatar,
+            'name' => $googleUser->getName(),
+            'email' => $googleUser->getEmail(),
+            'avatar' => $googleUser->getAvatar(),
             'password' => Hash::make(Str::random(24)),
         ]);
 
