@@ -16,6 +16,8 @@ return new class extends Migration {
             $table->foreignId('transaction_id')->constrained();
             $table->integer('commission_amount');
             $table->string('status')->default('PENDING');
+            $table->userstamps();
+            $table->userstampSoftDeletes();
             $table->timestamps();
         });
     }

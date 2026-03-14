@@ -147,7 +147,7 @@ export default function Login({ status, canResetPassword }) {
                         </div>
 
                         <a
-                            href="/api/auth/google?from=login"
+                            href={route('auth.google')}
                             className="w-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-medium py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-3 hover:shadow-md hover:border-slate-300 dark:hover:border-slate-500 hover:-translate-y-1 active:translate-y-0 active:scale-[0.98]"
                         >
                             <img

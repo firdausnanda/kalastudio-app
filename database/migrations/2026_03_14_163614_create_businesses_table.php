@@ -10,14 +10,11 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('packages', function (Blueprint $table) {
+        Schema::create('businesses', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->enum('type', ['subscription', 'booster']);
-            $table->integer('token_amount')->default(0);
-            $table->text('description')->nullable();
-            $table->json('features')->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('name'); // Contoh: "Toko Baju A"
+            $table->string('type'); // Contoh: "Retail", "Agency", "F&B"
             $table->userstamps();
             $table->userstampSoftDeletes();
             $table->timestamps();
@@ -29,6 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('packages');
+        Schema::dropIfExists('businesses');
     }
 };
