@@ -73,4 +73,14 @@ class LandingController extends Controller
     {
         return Inertia::render('Landing/Kontak');
     }
+
+    public function syaratKetentuan()
+    {
+        return Inertia::render('Landing/Syarat-Ketentuan');
+    }
+
+    public function kebijakanPrivasi()
+    {
+        return Inertia::render('Landing/Kebijakan-Privasi');
+    }
 }

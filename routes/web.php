@@ -17,6 +17,8 @@ Route::get('/integrasi-wa', [LandingController::class, 'integrasiWA'])->name('in
 Route::get('/tentang-kami', [LandingController::class, 'tentangKami'])->name('tentang-kami');
 Route::get('/karier', [LandingController::class, 'karier'])->name('karier');
 Route::get('/kontak', [LandingController::class, 'kontak'])->name('kontak');
+Route::get('/syarat-ketentuan', [LandingController::class, 'syaratKetentuan'])->name('syarat-ketentuan');
+Route::get('/kebijakan-privasi', [LandingController::class, 'kebijakanPrivasi'])->name('kebijakan-privasi');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
