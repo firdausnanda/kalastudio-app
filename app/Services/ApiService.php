@@ -44,7 +44,7 @@ class ApiService
   /**
    * Register ke API Eksternal
    */
-  public function register(string $email, string $password, string $phone, string $businessName, string $businessType, string $address, string $name): ?string
+  public function register(string $email, string $password, string $phone, string $businessName, string $businessType, string $address, string $name)
   {
     $response = Http::post("{$this->baseUrl}/api/auth/register", [
       'nomor_wa' => $phone,
@@ -56,11 +56,7 @@ class ApiService
       'alamat' => $address,
     ]);
 
-    if ($response->successful()) {
-      return $response->json('token');
-    }
-
-    return null;
+    return $response->json();
   }
 
   /**
