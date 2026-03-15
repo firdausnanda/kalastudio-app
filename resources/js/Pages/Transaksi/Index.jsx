@@ -141,7 +141,7 @@ export default function TransactionPage({ transaksi }) {
                 <p className="text-slate-500 dark:text-slate-400">Kelola dan pantau seluruh arus kas bisnis Anda.</p>
               </div>
               <Link
-                href="/transaksi/tambah"
+                href="/transaksi/create"
                 className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/20 hover:-translate-y-1 transition-all active:scale-95"
               >
                 <span className="material-symbols-outlined">add</span>

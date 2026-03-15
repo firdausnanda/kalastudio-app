@@ -104,4 +104,32 @@ class ApiService
 
     return null;
   }
+
+  /**
+   * Store transaksi data to API Eksternal
+   */
+  public function storeTransaksi(string $phone, array $data)
+  {
+    $response = Http::withToken($this->token)->post("{$this->baseUrl}/api/transaksi/{$phone}/store", $data);
+
+    return $response->json();
+  }
+
+  /**
+   * Fetch laporan data from API Eksternal
+   */
+  public function fetchLaporanData(string $phone, string $month)
+  {
+    $responses = Http::pool(fn(Pool $pool) => [
+      $pool->withToken($this->token)->get($this->baseUrl . "/api/transaksi/{$phone}/summary"),
+      $pool->withToken($this->token)->get($this->baseUrl . "/api/laporan/{$phone}/chart/bulanan?bulan={$month}"),
+      $pool->withToken($this->token)->get($this->baseUrl . "/api/anomali/{$phone}/insight"),
+    ]);
+
+    return [
+      'summary' => $responses[0]->successful() ? $responses[0]->json() : null,
+      'monthlyReport' => $responses[1]->successful() ? $responses[1]->json() : null,
+      'insights' => $responses[2]->successful() ? $responses[2]->json() : null,
+    ];
+  }
 }
