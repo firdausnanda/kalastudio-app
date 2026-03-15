@@ -15,7 +15,7 @@ import DashboardSidebar from '@/Components/DashboardSidebar';
 import DashboardFooter from '@/Components/DashboardFooter';
 import { Link } from '@inertiajs/react';
 
-export default function Dashboard({ chartDataProp, statsProp, transactionsProp, userDataProp }) {
+export default function Dashboard({ chartDataProp, statsProp, transactionsProp }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   useEffect(() => {
@@ -179,7 +179,7 @@ export default function Dashboard({ chartDataProp, statsProp, transactionsProp, 
 
   return (
     <div className="bg-slate-50 dark:bg-slate-950 min-h-screen flex flex-col font-display transition-colors duration-300">
-      <DashboardHeader isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} userDataProp={userDataProp} />
+      <DashboardHeader isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 
       <div className="flex flex-grow relative overflow-hidden">
         <DashboardSidebar isSidebarOpen={isSidebarOpen} />

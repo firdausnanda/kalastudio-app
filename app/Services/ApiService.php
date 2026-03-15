@@ -90,4 +90,18 @@ class ApiService
 
     return null;
   }
+
+  /**
+   * Fetch transaksi data from API Eksternal
+   */
+  public function fetchTransaksi(string $phone)
+  {
+    $response = Http::withToken($this->token)->get("{$this->baseUrl}/api/transaksi/{$phone}/full");
+
+    if ($response->successful()) {
+      return $response->json();
+    }
+
+    return null;
+  }
 }

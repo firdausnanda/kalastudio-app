@@ -26,13 +26,10 @@ class DashboardController extends Controller
             ->setToken($user->external_api_token)
             ->fetchDashboardData($phone);
 
-        $userDataExternal = $phone ? $this->apiService->fetchUser($phone) : null;
-
         return Inertia::render('Dashboard/Index', [
             'chartDataProp' => $dashboardData['weekly_report']['data'] ?? [],
             'statsProp' => $dashboardData['summary']['data'] ?? [],
             'transactionsProp' => $dashboardData['transactions']['data']['data'] ?? [],
-            'userDataProp' => $userDataExternal['data'] ?? $userDataExternal,
         ]);
     }
 

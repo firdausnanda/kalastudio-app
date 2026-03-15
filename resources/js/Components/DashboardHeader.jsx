@@ -1,18 +1,22 @@
 import { useState, useEffect } from 'react';
 import { Link, usePage, router } from '@inertiajs/react';
 
-export default function DashboardHeader({ isSidebarOpen, setIsSidebarOpen, userDataProp }) {
-  const { auth } = usePage().props;
+export default function DashboardHeader({ isSidebarOpen, setIsSidebarOpen, userDataExternal: propUserDataExternal }) {
+  const { auth, userDataExternal: sharedUserDataExternal } = usePage().props;
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [user, setUser] = useState(auth.user);
-  const [userData, setUserData] = useState(userDataProp);
+  
+  // Use prop if passed, otherwise use shared data from HandleInertiaRequests
+  const initialUserData = propUserDataExternal || sharedUserDataExternal;
+  const [userData, setUserData] = useState(initialUserData?.data || initialUserData);
 
   useEffect(() => {
-    if (userDataProp) {
-        setUserData(userDataProp.data || userDataProp);
+    const data = propUserDataExternal || sharedUserDataExternal;
+    if (data) {
+      setUserData(data.data || data);
     }
-  }, [userDataProp]);
+  }, [propUserDataExternal, sharedUserDataExternal]);
 
   useEffect(() => { // Wrapped the theme logic in useEffect
     if (localStorage.getItem('theme') === 'dark') {
