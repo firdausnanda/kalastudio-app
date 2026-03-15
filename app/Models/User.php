@@ -25,6 +25,7 @@ class User extends Authenticatable
         'password',
         'google_id',
         'avatar',
+        'external_api_token',
     ];
 
     /**
@@ -50,8 +51,13 @@ class User extends Authenticatable
         ];
     }
 
-    public function detail()
+    public function business()
     {
-        return $this->hasMany(UserDetail::class, 'user_id', 'id');
+        return $this->hasMany(Businesses::class, 'user_id', 'id');
+    }
+
+    public function UserWhatsapp()
+    {
+        return $this->hasMany(UserWhatsapp::class, 'user_id', 'id');
     }
 }

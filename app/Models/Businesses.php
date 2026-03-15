@@ -10,6 +10,7 @@ class Businesses extends Model
         'user_id',
         'name',
         'type',
+        'address'
     ];
 
     public function user()

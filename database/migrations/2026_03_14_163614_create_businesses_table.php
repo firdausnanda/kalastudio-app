@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('name'); // Contoh: "Toko Baju A"
             $table->string('type'); // Contoh: "Retail", "Agency", "F&B"
+            $table->text('address'); // Contoh: "Jl. Sudirman No. 123"
             $table->userstamps();
             $table->userstampSoftDeletes();
             $table->timestamps();
