@@ -6,7 +6,7 @@ export default function DashboardHeader({ isSidebarOpen, setIsSidebarOpen, userD
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [user, setUser] = useState(auth.user);
-  
+
   // Use prop if passed, otherwise use shared data from HandleInertiaRequests
   const initialUserData = propUserDataExternal || sharedUserDataExternal;
   const [userData, setUserData] = useState(initialUserData?.data || initialUserData);
@@ -152,7 +152,7 @@ export default function DashboardHeader({ isSidebarOpen, setIsSidebarOpen, userD
                   </div>
                   <div className="p-2">
                     <Link
-                      href="/profil"
+                      href="/profile"
                       onClick={() => setIsProfileOpen(false)}
                       className="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all font-bold"
                     >
