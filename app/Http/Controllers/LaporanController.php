@@ -17,7 +17,7 @@ class LaporanController extends Controller
         $apiService->setToken($user->external_api_token);
 
         $laporanData = $apiService->fetchLaporanData($phone, $month);
-        dd($laporanData);
+        // dd($laporanData);
         return Inertia::render('Laporan/Index', [
             'summaryProp' => $laporanData['summary'] ?? null,
             'insightsProp' => $laporanData['insights'] ?? null,
