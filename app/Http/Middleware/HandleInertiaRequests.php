@@ -33,7 +33,7 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $user = $request->user();
-        $phone = $user->UserWhatsapp()->first()->phone_number ?? '';
+        $phone = $user ? ($user->UserWhatsapp()->first()->phone_number ?? '') : '';
         $userDataExternal = null;
 
         if ($user && $phone && $user->external_api_token) {
