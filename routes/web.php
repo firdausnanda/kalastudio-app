@@ -3,6 +3,7 @@
 use App\Http\Controllers\ApiAccountController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\LanggananController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransaksiController;
@@ -43,6 +44,9 @@ Route::middleware(['auth', 'EnsureDetailsCompleted', 'CheckExternalApiToken'])->
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Langganan
+    Route::get('/langganan', [LanggananController::class, 'index'])->name('langganan.index');
 });
 
 require __DIR__ . '/auth.php';
