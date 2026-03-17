@@ -1,18 +1,25 @@
 <?php
 
-use App\Http\Controllers\ApiAccountController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\IntegrasiController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\LanggananController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\BoosterController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 Route::get('/fitur', [LandingController::class, 'fitur'])->name('fitur');
 Route::get('/harga', [LandingController::class, 'harga'])->name('harga');
+
+Route::get('/checkout', [PaymentController::class, 'checkout'])->name('payment.checkout');
+Route::post('/payment/create-invoice', [PaymentController::class, 'createInvoice'])->name('payment.invoice');
+Route::post('/payment/callback', [PaymentController::class, 'callback'])->name('payment.callback');
+
 Route::get('/partnership', [LandingController::class, 'partnership'])->name('partnership');
 Route::get('/tentang', [LandingController::class, 'tentang'])->name('tentang');
 Route::get('/blog', [LandingController::class, 'blog'])->name('blog');
@@ -47,6 +54,19 @@ Route::middleware(['auth', 'EnsureDetailsCompleted', 'CheckExternalApiToken'])->
 
     // Langganan
     Route::get('/langganan', [LanggananController::class, 'index'])->name('langganan.index');
+    Route::get('/langganan/booster', [BoosterController::class, 'index'])->name('langganan.booster');
+
+
+    // Integrasi
+    Route::get('/integrasi', [IntegrasiController::class, 'index'])->name('integrasi.index');
+    Route::post('/integrasi', [IntegrasiController::class, 'store'])->name('integrasi.store');
+    Route::patch('/integrasi/{id}', [IntegrasiController::class, 'update'])->name('integrasi.update');
+    Route::delete('/integrasi/{id}', [IntegrasiController::class, 'destroy'])->name('integrasi.destroy');
+    Route::post('/integrasi/{id}/connect', [IntegrasiController::class, 'connect'])->name('integrasi.connect');
+    Route::post('/integrasi/{id}/reconnect', [IntegrasiController::class, 'reconnect'])->name('integrasi.reconnect');
+    Route::post('/integrasi/{id}/disconnect', [IntegrasiController::class, 'disconnect'])->name('integrasi.disconnect');
+    Route::get('/integrasi/{id}/qrcode', [IntegrasiController::class, 'qrcode'])->name('integrasi.qrcode');
+    Route::get('/integrasi/{id}/status', [IntegrasiController::class, 'status'])->name('integrasi.status');
 });
 
 require __DIR__ . '/auth.php';

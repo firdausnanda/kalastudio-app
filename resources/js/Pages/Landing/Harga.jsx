@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import BottomCTA from '@/components/BottomCTA';
+import { Link } from '@inertiajs/react';
+
 
 export default function PricingPage() {
   const [isAnnual, setIsAnnual] = useState(true);
@@ -203,12 +205,16 @@ export default function PricingPage() {
                       ))}
                     </ul>
 
-                    <button className={`w-full py-5 rounded-2xl font-black text-lg transition-all duration-300 ${plan.popular
-                      ? 'bg-primary text-white shadow-xl shadow-primary/30 hover:shadow-2xl hover:bg-primary/90'
-                      : 'bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700'
-                      }`}>
-                      {plan.cta}
-                    </button>
+                      <Link 
+                        href={`/checkout?plan=${plan.name}&billing=${isAnnual ? 'annual' : 'monthly'}`}
+                        className={`w-full py-5 rounded-2xl font-black text-lg text-center transition-all duration-300 ${plan.popular
+                          ? 'bg-primary text-white shadow-xl shadow-primary/30 hover:shadow-2xl hover:bg-primary/90'
+                          : 'bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700'
+                        }`}
+                      >
+                        {plan.cta}
+                      </Link>
+
                   </div>
                 ))}
               </div>

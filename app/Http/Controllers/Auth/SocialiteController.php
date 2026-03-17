@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
@@ -12,10 +14,14 @@ use Illuminate\Support\Str;
 
 class SocialiteController extends Controller
 {
-    public function redirectToGoogle(): RedirectResponse
+    public function redirectToGoogle(Request $request): RedirectResponse
     {
+        if ($request->has('redirect')) {
+            session(['url.intended' => $request->get('redirect')]);
+        }
         return Socialite::driver('google')->redirect();
     }
+
 
     public function handleGoogleCallback(): RedirectResponse
     {

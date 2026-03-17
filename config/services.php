@@ -44,4 +44,11 @@ return [
     'external_api' => [
         'base_url' => env('EXTERNAL_API_BASE_URL'),
     ],
+
+    'xendit' => [
+        'secret_key' => env('XENDIT_SECRET_KEY'),
+        'webhook_token' => env('XENDIT_WEBHOOK_TOKEN'),
+    ],
 ];
+
+

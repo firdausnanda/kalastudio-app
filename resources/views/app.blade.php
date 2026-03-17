@@ -9,6 +9,8 @@
     <meta name="description" content="Kelola keuangan bisnis kamu dengan mudah dan cerdas bersama KalaStudio.">
 
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"

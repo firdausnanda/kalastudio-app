@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 
 export default function Header() {
+  const { auth } = usePage().props;
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -69,13 +70,25 @@ export default function Header() {
             </span>
           </button>
 
-          <Link className="text-sm font-bold text-secondary px-4 py-2 hover:bg-slate-50 rounded-lg transition-all dark:text-slate-200 dark:hover:bg-slate-800 hidden sm:block" href="/login">
-            Masuk
-          </Link>
+          {auth.user ? (
+            <Link 
+              className="bg-slate-900 dark:bg-primary hover:bg-slate-800 dark:hover:bg-primary/90 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-slate-900/10 dark:shadow-primary/20 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] flex items-center gap-2" 
+              href="/dashboard"
+            >
+              <span className="material-symbols-outlined text-lg">dashboard</span>
+              Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link className="text-sm font-bold text-secondary px-4 py-2 hover:bg-slate-50 rounded-lg transition-all dark:text-slate-200 dark:hover:bg-slate-800 hidden sm:block" href="/login">
+                Masuk
+              </Link>
 
-          <Link className="bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 transition-all duration-300 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] hidden sm:block" href="/register">
-            Coba Gratis
-          </Link>
+              <Link className="bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 transition-all duration-300 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] hidden sm:block" href="/register">
+                Coba Gratis
+              </Link>
+            </>
+          )}
 
           {/* Hamburger Menu Button */}
           <button
@@ -120,19 +133,35 @@ export default function Header() {
               </Link>
             ))}
             <div className="h-px bg-slate-100 dark:border-slate-800 my-4 mx-4"></div>
-            <Link
-              onClick={() => setIsMenuOpen(false)}
-              className="text-lg font-bold text-secondary dark:text-slate-200 p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-between group"
-              href="/login"
-            >
-              Masuk
-              <span className="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-opacity">login</span>
-            </Link>
-            <div className="px-4 pb-4">
-              <Link href="/register" onClick={() => setIsMenuOpen(false)} className="w-full bg-primary text-white py-5 rounded-[20px] font-black text-lg shadow-xl shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98] mt-4 flex items-center justify-center">
-                Coba Gratis Sekarang
-              </Link>
-            </div>
+            
+            {auth.user ? (
+              <div className="px-4 pb-4">
+                <Link 
+                  href="/dashboard" 
+                  onClick={() => setIsMenuOpen(false)} 
+                  className="w-full bg-primary text-white py-5 rounded-[20px] font-black text-lg shadow-xl shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98] mt-4 flex items-center justify-center gap-3"
+                >
+                  <span className="material-symbols-outlined">dashboard</span>
+                  Ke Dashboard
+                </Link>
+              </div>
+            ) : (
+              <>
+                <Link
+                  onClick={() => setIsMenuOpen(false)}
+                  className="text-lg font-bold text-secondary dark:text-slate-200 p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-between group"
+                  href="/login"
+                >
+                  Masuk
+                  <span className="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-opacity">login</span>
+                </Link>
+                <div className="px-4 pb-4">
+                  <Link href="/register" onClick={() => setIsMenuOpen(false)} className="w-full bg-primary text-white py-5 rounded-[20px] font-black text-lg shadow-xl shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98] mt-4 flex items-center justify-center">
+                    Coba Gratis Sekarang
+                  </Link>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

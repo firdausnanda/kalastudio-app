@@ -13,7 +13,9 @@ export default function SubscriptionPage({ transactions = [], currentPackage = n
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [plans, setPlans] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [billingCycle, setBillingCycle] = useState('monthly');
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+
 
   const activePlan = plans.find(p => p.isCurrent) || (currentPackage ? {
     ...currentPackage,
@@ -47,8 +49,6 @@ export default function SubscriptionPage({ transactions = [], currentPackage = n
 
       if (result.success && result.data) {
         const mappedPlans = result.data.map(pkg => {
-          const monthlyPrice = pkg.prices.find(p => p.billing_cycle === 'monthly')?.price || 0;
-
           let features = [];
           try {
             features = typeof pkg.features === 'string' ? JSON.parse(pkg.features) : (pkg.features || []);
@@ -57,45 +57,25 @@ export default function SubscriptionPage({ transactions = [], currentPackage = n
           }
 
           return {
+            id: pkg.id,
             name: pkg.name,
-            price: monthlyPrice === 0 ? 'Gratis' : new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(monthlyPrice),
-            period: '/bulan',
             features: features,
             description: pkg.description,
             tokens: pkg.token_amount,
             rawPrices: pkg.prices,
-            buttonText: pkg.name.toLowerCase() === currentPlanName.toLowerCase() ? 'Paket Aktif' : 'Pilih ' + pkg.name,
-            isCurrent: pkg.name.toLowerCase() === currentPlanName.toLowerCase(),
             popular: pkg.name === 'Business',
             color: pkg.name === 'Starter' ? 'bg-blue-500' : (pkg.name === 'Business' ? 'bg-primary' : 'bg-amber-500'),
           };
         });
 
-        // Add Professional plan fallback if not in API
+        // Add Professional plan fallback
         if (!mappedPlans.find(p => p.name === 'Professional')) {
           mappedPlans.push({
             name: 'Professional',
             price: 'Custom',
-            period: '/bulan',
             features: ['Unlimited Token', 'Fitur Custom', 'Multi User Access', 'API Access', '24/7 VIP Support'],
-            buttonText: 'Hubungi Kami',
-            isCurrent: currentPlanName === 'Professional',
             color: 'bg-amber-500',
-          });
-        }
-
-        // Add Free plan fallback if it's the current plan but not in API
-        if (currentPlanName === 'Free' && !mappedPlans.find(p => p.name === 'Free')) {
-          mappedPlans.unshift({
-            name: 'Free',
-            price: 'Gratis',
-            period: '/selamanya',
-            features: ['Akses Dasar', '1 Proyek Aktif', '100 AI Tokens', 'Support Komunitas'],
-            description: 'Nikmati fitur dasar Kalastudio untuk memulai bisnis Anda secara gratis.',
-            tokens: 100,
-            isCurrent: true,
-            color: 'bg-slate-400',
-            buttonText: 'Paket Aktif'
+            isCustom: true
           });
         }
 
@@ -107,6 +87,30 @@ export default function SubscriptionPage({ transactions = [], currentPackage = n
       setIsLoading(false);
     }
   };
+
+  const handlePlanSelect = (plan) => {
+    if (plan.name.toLowerCase() === currentPlanName.toLowerCase()) return;
+    if (plan.isCustom) {
+      window.location.href = 'mailto:sales@kalastudio.com';
+      return;
+    }
+
+    const billing = billingCycle === 'annual' ? 'annual' : 'monthly';
+    window.location.href = `/checkout?plan=${plan.name}&billing=${billing}`;
+  };
+
+  const getPlanPriceDisplay = (plan) => {
+    if (plan.isCustom) return 'Custom';
+
+    const cycle = billingCycle === 'annual' ? 'annually' : 'monthly';
+    const priceObj = plan.rawPrices?.find(p => p.billing_cycle === cycle);
+    const price = priceObj ? parseFloat(priceObj.price) : 0;
+
+    if (price === 0) return 'Gratis';
+
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(price);
+  };
+
 
 
   return (
@@ -177,51 +181,88 @@ export default function SubscriptionPage({ transactions = [], currentPackage = n
                 >
                   Tingkatkan Paket
                 </button>
+                <Link
+                  href="/langganan/booster"
+                  className="w-full py-4 text-primary font-black text-[11px] uppercase tracking-widest hover:bg-primary/5 rounded-xl border border-primary/10 transition-all text-center"
+                >
+                  Beli Token Booster
+                </Link>
                 <button
                   onClick={() => setIsDetailModalOpen(true)}
                   className="w-full py-4 text-slate-500 dark:text-slate-400 font-bold text-[11px] uppercase tracking-widest hover:text-slate-900 dark:hover:text-white transition-colors"
                 >
                   Detail & Fitur
                 </button>
+
+              </div>
+            </div>
+
+            {/* Billing Cycle Toggle */}
+            <div className="flex justify-center">
+              <div className="bg-white dark:bg-slate-900 p-1.5 rounded-2xl border border-slate-200/60 dark:border-slate-800 shadow-sm inline-flex items-center gap-1">
+                <button
+                  onClick={() => setBillingCycle('monthly')}
+                  className={`px-6 py-2.5 rounded-[14px] text-[10px] font-black uppercase tracking-widest transition-all ${billingCycle === 'monthly' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'}`}
+                >
+                  Bulanan
+                </button>
+                <button
+                  onClick={() => setBillingCycle('annual')}
+                  className={`px-6 py-2.5 rounded-[14px] text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${billingCycle === 'annual' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'}`}
+                >
+                  Tahunan
+                  <span className="px-1.5 py-0.5 bg-green-500/10 text-green-500 text-[8px] rounded-md border border-green-500/10">-20%</span>
+                </button>
               </div>
             </div>
 
             {/* Pricing Grid */}
             {isLoading ? (
+
               <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 shadow-xl">
                 <span className="material-symbols-outlined animate-spin text-primary text-5xl mb-4">refresh</span>
                 <p className="text-slate-500 font-black uppercase tracking-widest text-[10px]">Menyinkronkan Paket...</p>
               </div>
             ) : (
               <section id='pricing' className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {plans.map((plan, i) => (
-                  <div
-                    key={i}
-                    className={`bg-white dark:bg-slate-900 p-8 rounded-[40px] border transition-all flex flex-col hover:scale-[1.02] ${plan.isCurrent ? 'border-primary ring-4 ring-primary/5 shadow-2xl shadow-primary/10' : 'border-slate-100 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'}`}
-                  >
-                    {plan.popular && (
-                      <div className="self-start mb-6 px-4 py-1.5 bg-primary text-white text-[10px] font-black rounded-full uppercase tracking-widest shadow-lg shadow-primary/20">Paling Populer</div>
-                    )}
-                    <h4 className={`text-sm font-black uppercase tracking-[0.2em] mb-4 ${plan.isCurrent ? 'text-primary' : 'text-slate-400'}`}>{plan.name}</h4>
-                    <div className="flex items-baseline gap-1 mb-8">
-                      <span className="text-3xl font-black text-slate-900 dark:text-white">{plan.price}</span>
-                      <span className="text-sm font-bold text-slate-400">{plan.period}</span>
-                    </div>
+                {plans.map((plan, i) => {
+                  const isCurrent = plan.name.toLowerCase() === currentPlanName.toLowerCase();
+                  return (
+                    <div
+                      key={i}
+                      className={`bg-white dark:bg-slate-900 p-8 rounded-[40px] border transition-all flex flex-col hover:scale-[1.02] ${isCurrent ? 'border-primary ring-4 ring-primary/5 shadow-2xl shadow-primary/10' : 'border-slate-100 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'}`}
+                    >
+                      {plan.popular && (
+                        <div className="self-start mb-6 px-4 py-1.5 bg-primary text-white text-[10px] font-black rounded-full uppercase tracking-widest shadow-lg shadow-primary/20">Paling Populer</div>
+                      )}
+                      <h4 className={`text-sm font-black uppercase tracking-[0.2em] mb-4 ${isCurrent ? 'text-primary' : 'text-slate-400'}`}>{plan.name}</h4>
+                      <div className="flex items-baseline gap-1 mb-8">
+                        <span className="text-3xl font-black text-slate-900 dark:text-white">{getPlanPriceDisplay(plan)}</span>
+                        {!plan.isCustom && (
+                          <span className="text-sm font-bold text-slate-400">/{billingCycle === 'annual' ? 'tahun' : 'bulan'}</span>
+                        )}
+                      </div>
 
-                    <div className="space-y-4 mb-10 flex-grow">
-                      {plan.features.map((feature, idx) => (
-                        <div key={idx} className="flex items-center gap-3">
-                          <span className="material-symbols-outlined text-green-500 text-lg">check_circle</span>
-                          <span className="text-xs font-bold text-slate-600 dark:text-slate-400">{feature}</span>
-                        </div>
-                      ))}
-                    </div>
+                      <div className="space-y-4 mb-10 flex-grow">
+                        {plan.features.map((feature, idx) => (
+                          <div key={idx} className="flex items-center gap-3">
+                            <span className="material-symbols-outlined text-green-500 text-lg">check_circle</span>
+                            <span className="text-xs font-bold text-slate-600 dark:text-slate-400">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
 
-                    <button className={`w-full py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all ${plan.isCurrent ? 'bg-primary text-white shadow-xl shadow-primary/20' : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'}`}>
-                      {plan.buttonText}
-                    </button>
-                  </div>
-                ))}
+                      <button
+                        onClick={() => handlePlanSelect(plan)}
+                        disabled={isCurrent}
+                        className={`w-full py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all ${isCurrent ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed' : 'bg-primary text-white shadow-xl shadow-primary/20 hover:shadow-2xl active:scale-95'}`}
+                      >
+                        {isCurrent ? 'Paket Aktif' : plan.isCustom ? 'Hubungi Kami' : `Pilih ${plan.name}`}
+                      </button>
+                    </div>
+                  );
+                })}
+
               </section>
             )}
 
@@ -235,7 +276,7 @@ export default function SubscriptionPage({ transactions = [], currentPackage = n
                 <table className="w-full">
                   <thead>
                     <tr className="bg-slate-50/50 dark:bg-slate-800/30">
-                      <th className="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">No. Invois</th>
+                      <th className="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">No. Invoice</th>
                       <th className="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Tanggal</th>
                       <th className="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Nominal</th>
                       <th className="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Status</th>

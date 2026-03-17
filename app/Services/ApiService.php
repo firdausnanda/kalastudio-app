@@ -42,6 +42,92 @@ class ApiService
   }
 
   /**
+   * Check Account Whatsapp
+   */
+  public function checkAccountWhatsapp()
+  {
+    $response = Http::withToken($this->token)->get("{$this->baseUrl}/api/accounts/my-list");
+
+    if ($response->successful()) {
+      return $response->json();
+    }
+
+    return null;
+  }
+
+  /**
+   * Connect Whatsapp
+   */
+  public function connectWhatsapp($id)
+  {
+    $response = Http::withToken($this->token)->post("{$this->baseUrl}/api/accounts/{$id}/connect");
+    return $response->json();
+  }
+
+  /**
+   * Update Account Tenant
+   */
+  public function updateAccountTenant($id, $data)
+  {
+    $response = Http::withToken($this->token)->patch("{$this->baseUrl}/api/accounts/{$id}", $data);
+    return $response->json();
+  }
+
+  /**
+   * Store Account Tenant
+   */
+  public function storeAccountTenant($data)
+  {
+    $response = Http::withToken($this->token)->post("{$this->baseUrl}/api/accounts", $data);
+    return $response->json();
+  }
+
+  /**
+   * Check Status Whatsapp
+   */
+  public function checkStatusWhatsapp($id)
+  {
+    $response = Http::withToken($this->token)->get("{$this->baseUrl}/api/accounts/{$id}/status");
+
+    if ($response->successful()) {
+      return $response->json();
+    }
+
+    return null;
+  }
+
+  /**
+   * Show Qrcode Whatsapp
+   */
+  public function showQrcodeWhatsapp($id)
+  {
+    $response = Http::withToken($this->token)->get("{$this->baseUrl}/api/accounts/{$id}/qr");
+    if ($response->successful()) {
+      return $response->json();
+    }
+
+    return null;
+  }
+
+  /**
+   * Disconnect Whatsapp
+   */
+  public function disconnectWhatsapp($id)
+  {
+    $response = Http::withToken($this->token)->post("{$this->baseUrl}/api/accounts/{$id}/disconnect");
+    return $response->json();
+  }
+
+  /**
+   * Reconnect Whatsapp
+   */
+  public function reconnectWhatsapp($id)
+  {
+    $response = Http::withToken($this->token)->post("{$this->baseUrl}/api/accounts/{$id}/reconnect");
+    return $response->json();
+  }
+
+  /**
    * Register ke API Eksternal
    */
   public function register(string $email, string $password, string $phone, string $businessName, string $businessType, string $address, string $name)
