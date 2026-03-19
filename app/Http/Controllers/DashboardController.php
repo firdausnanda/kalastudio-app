@@ -71,13 +71,13 @@ class DashboardController extends Controller
                     $user->name
                 );
 
-                if (!$token['success']) {
-                    throw new \Exception($token['message']);
+                if (!($token['success'] ?? false)) {
+                    throw new \Exception($token['message'] ?? 'Gagal mendaftar ke layanan API.');
                 }
 
                 // 4. Update Token API Eksternal
                 $user->update([
-                    'external_api_token' => $token['token'],
+                    'external_api_token' => $token['token'] ?? '',
                 ]);
             });
 
