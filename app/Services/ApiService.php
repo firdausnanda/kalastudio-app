@@ -224,7 +224,7 @@ class ApiService
    */
   public function updateUserPackage(string $phone, string $plan)
   {
-    $response = Http::withToken($this->token)->post("{$this->baseUrl}/api/users/{$phone}/update-plan", [
+    $response = Http::withToken($this->token)->patch("{$this->baseUrl}/api/users/{$phone}/plan", [
       'plan' => $plan,
     ]);
 

@@ -141,7 +141,7 @@ class PaymentController extends Controller
         if ($request->header('x-callback-token') !== $xenditCallbackToken) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
-        dd($request->all());
+
         $data = $request->all();
         $externalId = $data['external_id'] ?? '';
 
