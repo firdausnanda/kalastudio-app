@@ -15,6 +15,10 @@ class LanggananController extends Controller
         $transactions = Transaction::where('user_id', Auth::user()->id)->latest()->get();
         $fetchUser = $apiService->setToken(Auth::user()->external_api_token)->fetchUser(Auth::user()->userWhatsapp()->first()->phone_number);
 
+        if ($fetchUser == null) {
+            return redirect()->route('dashboard');
+        }
+
         if ($fetchUser['plan'] == 'professional') {
             $currentPackage = [
                 'name' => 'Professional',
