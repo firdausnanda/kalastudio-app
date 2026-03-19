@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\Api\PackageController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,3 +19,5 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::post('/checkout', [CheckoutController::class, 'createInvoice']);
 });
+
+Route::post('/payment/callback', [PaymentController::class, 'callback'])->name('payment.callback');

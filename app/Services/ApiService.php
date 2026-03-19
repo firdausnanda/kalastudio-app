@@ -218,4 +218,28 @@ class ApiService
       'insights' => $responses[2]->successful() ? $responses[2]->json() : null,
     ];
   }
+
+  /**
+   * Update User Package in API Eksternal
+   */
+  public function updateUserPackage(string $phone, string $plan)
+  {
+    $response = Http::withToken($this->token)->post("{$this->baseUrl}/api/users/{$phone}/update-plan", [
+      'plan' => $plan,
+    ]);
+
+    return $response->json();
+  }
+
+  /**
+   * Add Booster Tokens in API Eksternal
+   */
+  public function addBoosterTokens(string $phone, int $tokens)
+  {
+    $response = Http::withToken($this->token)->post("{$this->baseUrl}/api/users/{$phone}/add-tokens", [
+      'tokens' => $tokens,
+    ]);
+
+    return $response->json();
+  }
 }

@@ -18,7 +18,6 @@ Route::get('/harga', [LandingController::class, 'harga'])->name('harga');
 
 Route::get('/checkout', [PaymentController::class, 'checkout'])->name('payment.checkout');
 Route::post('/payment/create-invoice', [PaymentController::class, 'createInvoice'])->name('payment.invoice');
-Route::post('/payment/callback', [PaymentController::class, 'callback'])->name('payment.callback');
 
 Route::get('/partnership', [LandingController::class, 'partnership'])->name('partnership');
 Route::get('/tentang', [LandingController::class, 'tentang'])->name('tentang');

@@ -13,6 +13,7 @@ use Illuminate\Validation\Rules;
 use Illuminate\Auth\Events\Registered;
 use App\Models\Transaction;
 use App\Models\PackagesPrices;
+use App\Services\ApiService;
 
 
 
@@ -84,7 +85,8 @@ class PaymentController extends Controller
         $packagePrice = null;
         if ($package) {
             $cycle = $request->billing_cycle;
-            if ($cycle === 'annual') $cycle = 'annually';
+            if ($cycle === 'annual')
+                $cycle = 'annually';
             $packagePrice = $package->prices()->where('billing_cycle', $cycle)->first();
         }
 
@@ -132,27 +134,39 @@ class PaymentController extends Controller
     /**
      * Xendit Webhook Callback.
      */
-    public function callback(Request $request)
+    public function callback(Request $request, ApiService $apiService)
     {
         $xenditCallbackToken = config('services.xendit.webhook_token');
 
         if ($request->header('x-callback-token') !== $xenditCallbackToken) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
-
+        dd($request->all());
         $data = $request->all();
         $externalId = $data['external_id'] ?? '';
 
         // Extract transaction ID from external_id (INV-{id}-{timestamp})
         if (preg_match('/INV-(\d+)-/', $externalId, $matches)) {
             $transactionId = $matches[1];
-            $transaction = Transaction::find($transactionId);
+            $transaction = Transaction::with(['user.UserWhatsapp', 'packagePrice.package'])->find($transactionId);
 
-            if ($transaction) {
+            if ($transaction && $transaction->status === 'PENDING') {
                 if ($data['status'] === 'SETTLED' || $data['status'] === 'PAID') {
                     $transaction->update(['status' => 'PAID']);
 
-                    // e.g., $transaction->user->update(['package_id' => $transaction->packagePrice->package_id]);
+                    $user = $transaction->user;
+                    $phone = $user->UserWhatsapp->first()->phone_number ?? null;
+                    $package = $transaction->packagePrice->package ?? null;
+
+                    if ($phone && $package) {
+                        $apiService->setToken($user->external_api_token);
+
+                        if ($package->type === 'booster') {
+                            $apiService->addBoosterTokens($phone, $package->token_amount);
+                        } else {
+                            $apiService->updateUserPackage($phone, strtolower($package->name));
+                        }
+                    }
                 } elseif ($data['status'] === 'EXPIRED') {
                     $transaction->update(['status' => 'EXPIRED']);
                 }
