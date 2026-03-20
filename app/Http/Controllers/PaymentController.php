@@ -14,6 +14,7 @@ use Illuminate\Auth\Events\Registered;
 use App\Models\Transaction;
 use App\Models\PackagesPrices;
 use App\Services\ApiService;
+use Log;
 
 
 
@@ -108,8 +109,8 @@ class PaymentController extends Controller
                 'amount' => $request->amount,
                 'payer_email' => $request->email,
                 'description' => 'Pembayaran Paket ' . $request->plan_name,
-                'success_redirect_url' => route('dashboard'),
-                'failure_redirect_url' => route('harga'),
+                'success_redirect_url' => route('langganan'),
+                'failure_redirect_url' => route('langganan'),
             ]);
 
         if ($response->successful()) {
@@ -171,6 +172,10 @@ class PaymentController extends Controller
                     $transaction->update(['status' => 'EXPIRED']);
                 }
             }
+
+            Log::info('Transaction updated: ' . $transactionId . ' ' . $data['status']);
+        } else {
+            Log::error('Transaction unsuccessful: ' . $data);
         }
 
         return response()->json(['status' => 'success']);
