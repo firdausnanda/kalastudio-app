@@ -45,7 +45,8 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => $request->user(),
+                'user' => $user ? $user->load('roles') : null,
+                'is_impersonating' => $user ? $user->isImpersonated() : false,
             ],
             'ziggy' => fn() => [
                 ...(new Ziggy)->toArray(),

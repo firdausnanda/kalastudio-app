@@ -20,6 +20,11 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
+
+        if ($user->hasRole('admin')) {
+            return redirect()->route('admin.dashboard');
+        }
+
         $phone = $user->UserWhatsapp->first()->phone_number ?? '';
 
         $dashboardData = $this->apiService

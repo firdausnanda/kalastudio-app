@@ -40,7 +40,15 @@ class SocialiteController extends Controller
             'password' => Hash::make(Str::random(24)),
         ]);
 
+        if ($user->roles()->count() === 0) {
+            $user->assignRole('user');
+        }
+
         Auth::login($user);
+
+        if ($user->hasRole('admin')) {
+            return redirect()->route('admin.dashboard');
+        }
 
         return redirect()->intended(route('dashboard', absolute: false));
     }

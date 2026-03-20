@@ -14,7 +14,7 @@ class CheckExternalApiToken
         $user = $request->user();
 
         // Jika user login TAPI tidak punya token API
-        if ($user && empty($user->external_api_token) && !$request->routeIs('dashboard')) {
+        if ($user && !$user->hasRole('admin') && empty($user->external_api_token) && !$request->routeIs('dashboard')) {
             // 2. Putus sesi login lokal Laravel
             Auth::logout();
 

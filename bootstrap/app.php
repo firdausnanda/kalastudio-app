@@ -20,6 +20,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'CheckExternalApiToken' => \App\Http\Middleware\CheckExternalApiToken::class,
             'EnsureDetailsCompleted' => \App\Http\Middleware\EnsureDetailsCompleted::class,
+            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
 
         //

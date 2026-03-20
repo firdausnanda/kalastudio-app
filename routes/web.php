@@ -34,6 +34,7 @@ Route::get('/kebijakan-privasi', [LandingController::class, 'kebijakanPrivasi'])
 Route::middleware(['auth'])->group(function () {
     Route::get('/lengkapi-profil', [DashboardController::class, 'lengkapiProfil'])->name('lengkapi-profil');
     Route::post('/lengkapi-profil', [DashboardController::class, 'storeProfil'])->name('lengkapi-profil.store');
+    Route::impersonate();
 });
 
 Route::middleware(['auth', 'EnsureDetailsCompleted', 'CheckExternalApiToken'])->group(function () {
@@ -66,6 +67,15 @@ Route::middleware(['auth', 'EnsureDetailsCompleted', 'CheckExternalApiToken'])->
     Route::post('/integrasi/{id}/disconnect', [IntegrasiController::class, 'disconnect'])->name('integrasi.disconnect');
     Route::get('/integrasi/{id}/qrcode', [IntegrasiController::class, 'qrcode'])->name('integrasi.qrcode');
     Route::get('/integrasi/{id}/status', [IntegrasiController::class, 'status'])->name('integrasi.status');
+});
+
+// Admin
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
+    Route::patch('/users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'update'])->name('users.update');
+    Route::patch('/users/{user}/password', [\App\Http\Controllers\Admin\UserController::class, 'updatePassword'])->name('users.password');
+    Route::delete('/users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('users.destroy');
 });
 
 require __DIR__ . '/auth.php';

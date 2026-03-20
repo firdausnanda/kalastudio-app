@@ -8,11 +8,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
+use Lab404\Impersonate\Models\Impersonate;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, Impersonate;
 
     /**
      * The attributes that are mass assignable.
@@ -59,5 +61,15 @@ class User extends Authenticatable
     public function UserWhatsapp()
     {
         return $this->hasMany(UserWhatsapp::class, 'user_id', 'id');
+    }
+
+    public function canImpersonate()
+    {
+        return $this->hasRole('admin');
+    }
+
+    public function canBeImpersonated()
+    {
+        return !$this->hasRole('admin');
     }
 }
