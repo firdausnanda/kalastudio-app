@@ -4,10 +4,19 @@ import AdminHeader from '@/Components/Admin/AdminHeader';
 import AdminSidebar from '@/Components/Admin/AdminSidebar';
 import DashboardFooter from '@/Components/DashboardFooter';
 
+import Select from 'react-select';
+
 export default function PaymentIndex({ transactions, filters }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [search, setSearch] = useState(filters.search || '');
     const [status, setStatus] = useState(filters.status || 'ALL');
+
+    const statusOptions = [
+        { value: 'ALL', label: 'Semua Status' },
+        { value: 'PAID', label: 'PAID' },
+        { value: 'PENDING', label: 'PENDING' },
+        { value: 'EXPIRED', label: 'EXPIRED' },
+    ];
 
     useEffect(() => {
         const handleResize = () => {
@@ -73,19 +82,27 @@ export default function PaymentIndex({ transactions, filters }) {
                                     onKeyUp={(e) => e.key === 'Enter' && handleFilter()}
                                 />
                             </div>
-                            <select 
-                                className="w-full md:w-48 px-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 text-slate-900 dark:text-white"
-                                value={status}
-                                onChange={(e) => {
-                                    setStatus(e.target.value);
-                                    router.get(route('admin.payments.index'), { search, status: e.target.value }, { preserveState: true });
-                                }}
-                            >
-                                <option value="ALL">Semua Status</option>
-                                <option value="PAID">PAID</option>
-                                <option value="PENDING">PENDING</option>
-                                <option value="EXPIRED">EXPIRED</option>
-                            </select>
+                            <div className="w-full md:w-64">
+                                <Select 
+                                    options={statusOptions}
+                                    value={statusOptions.find(opt => opt.value === status)}
+                                    onChange={(opt) => {
+                                        setStatus(opt.value);
+                                        router.get(route('admin.payments.index'), { search, status: opt.value }, { preserveState: true });
+                                    }}
+                                    classNames={{
+                                        control: (state) => `!bg-slate-50 dark:!bg-slate-800 !border-none !rounded-2xl !px-4 !py-1.5 focus-within:!ring-2 focus-within:!ring-red-500/20`,
+                                        menu: () => `!bg-white dark:!bg-slate-900 !border !border-slate-100 dark:!border-slate-800 !rounded-2xl !overflow-hidden !shadow-2xl !mt-2`,
+                                        option: (state) => `!px-5 !py-3 !text-sm ${state.isSelected ? '!bg-red-500 !text-white' : state.isFocused ? '!bg-red-500/10 !text-red-500' : '!text-slate-600 dark:!text-slate-300'} !font-bold !cursor-pointer transition-colors`,
+                                        singleValue: () => `!text-slate-900 dark:!text-white !font-bold`,
+                                        placeholder: () => `!text-slate-400`,
+                                        dropdownIndicator: () => `!text-slate-400`,
+                                        indicatorSeparator: () => `!bg-slate-200 dark:!bg-slate-700`,
+                                    }}
+                                    unstyled
+                                    placeholder="Pilih Status"
+                                />
+                            </div>
                             <button 
                                 onClick={handleFilter}
                                 className="w-full md:w-auto px-8 py-3 bg-red-500 hover:bg-red-600 text-white font-black rounded-2xl transition-all shadow-lg shadow-red-500/20"
