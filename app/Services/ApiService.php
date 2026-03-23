@@ -196,7 +196,7 @@ class ApiService
    */
   public function storeTransaksi(string $phone, array $data)
   {
-    $response = Http::withToken($this->token)->post("{$this->baseUrl}/api/transaksi/{$phone}/store", $data);
+    $response = Http::withToken($this->token)->post("{$this->baseUrl}/api/transaksi/{$phone}", $data);
 
     return $response->json();
   }

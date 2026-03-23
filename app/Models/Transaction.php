@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Transaction extends Model
 {
+    use LogsActivity;
+
     protected $fillable = [
         'user_id',
         'package_price_id',
@@ -19,6 +23,13 @@ class Transaction extends Model
         'xendit_recurring_id',
         'next_billing_date',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['status', 'grand_total', 'subtotal']);
+    }
+
 
     protected $table = "transactions";
 

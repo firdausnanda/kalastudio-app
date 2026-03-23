@@ -7,6 +7,8 @@ export default function AdminSidebar({ isSidebarOpen }) {
   const menuItems = [
     { name: 'Dashboard', icon: 'admin_panel_settings', to: '/admin/dashboard' },
     { name: 'Manajemen User', icon: 'manage_accounts', to: '/admin/users' },
+    { name: 'Pembayaran', icon: 'payments', to: '/admin/payments' },
+    { name: 'Activity Log', icon: 'history', to: '/admin/activity-logs' },
     { name: 'Log Viewer', icon: 'terminal', to: '/log-viewer' },
   ];
 
