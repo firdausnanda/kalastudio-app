@@ -7,6 +7,7 @@ export default function AdminSidebar({ isSidebarOpen }) {
   const menuItems = [
     { name: 'Dashboard', icon: 'admin_panel_settings', to: '/admin/dashboard' },
     { name: 'Manajemen User', icon: 'manage_accounts', to: '/admin/users' },
+    { name: 'Log Viewer', icon: 'terminal', to: '/log-viewer' },
   ];
 
   return (
@@ -25,15 +26,16 @@ export default function AdminSidebar({ isSidebarOpen }) {
           <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 px-4">Menu Administrator</p>
           {menuItems.map((item, i) => {
             const isActive = currentPath === item.to;
+            const Tag = item.to === '/log-viewer' ? 'a' : Link;
             return (
-              <Link
+              <Tag
                 key={i}
                 href={item.to}
                 className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl font-bold transition-all ${isActive ? 'bg-red-500 text-white shadow-lg shadow-red-500/20' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-red-500'}`}
               >
                 <span className="material-symbols-outlined">{item.icon}</span>
                 {item.name}
-              </Link>
+              </Tag>
             );
           })}
         </div>
