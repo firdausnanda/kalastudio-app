@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->text('description')->nullable();
             $table->json('features')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->softDeletes();
             $table->userstamps();
             $table->userstampSoftDeletes();
             $table->timestamps();

@@ -10,16 +10,18 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('referral_rewards', function (Blueprint $table) {
+        Schema::create('blog_categories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('transaction_id')->constrained();
-            $table->integer('commission_amount');
-            $table->string('status')->default('PENDING');
+            $table->string('name');
+            $table->string('slug');
+            $table->text('description')->nullable();
             $table->softDeletes();
             $table->userstamps();
             $table->userstampSoftDeletes();
             $table->timestamps();
+
+            // Index untuk mempercepat query pencarian berdasarkan tenant dan slug
+            $table->unique(['slug']);
         });
     }
 
@@ -28,6 +30,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('referral_rewards');
+        Schema::dropIfExists('blog_categories');
     }
 };

@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->string('label')->nullable(); // "Admin Toko A", "Pribadi", dll
             $table->boolean('is_primary')->default(false);
             $table->boolean('receive_notifications')->default(true);
+            $table->softDeletes();
             $table->userstamps();
             $table->userstampSoftDeletes();
             $table->timestamps();

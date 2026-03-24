@@ -22,6 +22,7 @@ Route::post('/payment/create-invoice', [PaymentController::class, 'createInvoice
 Route::get('/partnership', [LandingController::class, 'partnership'])->name('partnership');
 Route::get('/tentang', [LandingController::class, 'tentang'])->name('tentang');
 Route::get('/blog', [LandingController::class, 'blog'])->name('blog');
+Route::get('/blog/{slug}', [LandingController::class, 'showPost'])->name('blog.show');
 Route::get('/panduan', [LandingController::class, 'panduan'])->name('panduan');
 Route::get('/laporan-ai', [LandingController::class, 'laporanAI'])->name('laporan-ai');
 Route::get('/integrasi-wa', [LandingController::class, 'integrasiWA'])->name('integrasi-wa');
@@ -79,6 +80,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     Route::get('/activity-logs', [\App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->name('activity-logs.index');
     Route::get('/payments', [\App\Http\Controllers\Admin\PaymentController::class, 'index'])->name('payments.index');
+
+    // Blog
+    Route::resource('blog-categories', \App\Http\Controllers\Admin\Blog\CategoryController::class)->except(['create', 'show', 'edit']);
+    Route::resource('blog-tags', \App\Http\Controllers\Admin\Blog\TagController::class)->except(['create', 'show', 'edit']);
+    Route::resource('blog-posts', \App\Http\Controllers\Admin\Blog\PostController::class)->except(['show']);
 });
 
 require __DIR__ . '/auth.php';

@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->integer('max_uses')->nullable(); // Batas maksimal penggunaan kode
             $table->integer('used_count')->default(0);
             $table->dateTime('valid_until')->nullable();
+            $table->softDeletes();
             $table->userstamps();
             $table->userstampSoftDeletes();
             $table->timestamps();

@@ -3,61 +3,12 @@ import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import BottomCTA from '@/Components/BottomCTA';
 
-export default function BlogPage() {
+import { Link } from '@inertiajs/react';
+
+export default function BlogPage({ featuredPost, posts }) {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  const posts = [
-    {
-      id: 1,
-      title: "5 Cara Mengatur Keuangan UMKM Agar Tetap Sehat",
-      category: "Tips Bisnis",
-      date: "8 Mar 2024",
-      image: "https://images.unsplash.com/photo-1454165833762-010491e7a027?q=80&w=800&auto=format&fit=crop",
-      excerpt: "Mengelola arus kas adalah kunci utama keberlangsungan bisnis kecil. Pelajari langkah praktisnya di sini."
-    },
-    {
-      id: 2,
-      title: "Manfaat Menggunakan WhatsApp untuk Pencatatan Transaksi",
-      category: "Teknologi",
-      date: "5 Mar 2024",
-      image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=800&auto=format&fit=crop",
-      excerpt: "Kenapa harus ribet buka laptop kalau bisa catat transaksi lewat aplikasi chat yang Anda gunakan setiap hari?"
-    },
-    {
-      id: 3,
-      title: "Update Fitur: Laporan Laba Rugi Otomatis Kini Lebih Cepat",
-      category: "Product Update",
-      date: "1 Mar 2024",
-      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop",
-      excerpt: "Kami baru saja merilis pembaruan mesin AI kami untuk memproses rekap suara Anda dalam hitungan detik."
-    },
-    {
-      id: 4,
-      title: "Strategi Pemasaran Digital untuk Pengusaha Pemula",
-      category: "Marketing",
-      date: "26 Feb 2024",
-      image: "https://images.unsplash.com/photo-1533750349088-cd871a92f312?q=80&w=800&auto=format&fit=crop",
-      excerpt: "Tingkatkan penjualan Anda dengan memanfaatkan media sosial dan konten kreatif yang menarik perhatian."
-    },
-    {
-      id: 5,
-      title: "Mengenal Perpajakan UMKM di Indonesia Tahun 2024",
-      category: "Edukasi",
-      date: "20 Feb 2024",
-      image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=800&auto=format&fit=crop",
-      excerpt: "Jangan sampai bisnis Anda terkendala masalah pajak. Pahami regulasi terbaru dengan bahasa yang mudah."
-    },
-    {
-      id: 6,
-      title: "Cara Menjaga Data Keuangan Bisnis Tetap Aman",
-      category: "Keamanan",
-      date: "15 Feb 2024",
-      image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=800&auto=format&fit=crop",
-      excerpt: "Keamanan data adalah tanggung jawab bersama. Simak tips menjaga kerahasiaan data di era digital."
-    }
-  ];
 
   return (
     <div className="bg-white text-slate-900 font-display transition-colors duration-300 dark:bg-slate-900 min-h-screen flex flex-col">
@@ -77,32 +28,40 @@ export default function BlogPage() {
         </section>
 
         {/* Featured Post */}
-        <section className="py-16 -mt-12 relative z-10 px-4">
-          <div className="max-w-7xl mx-auto">
-            <div className="bg-white dark:bg-slate-900 rounded-[40px] overflow-hidden shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col lg:flex-row hover:shadow-primary/5 transition-all duration-500">
-              <div className="lg:w-1/2 h-64 lg:h-auto relative overflow-hidden">
-                <img
-                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop"
-                  alt="Featured"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
-                />
-              </div>
-              <div className="lg:w-1/2 p-8 md:p-12 lg:p-16 flex flex-col justify-center">
-                <span className="text-primary font-black text-xs uppercase tracking-widest mb-4">Artikel Pilihan</span>
-                <h2 className="text-3xl md:text-4xl font-black mb-6 leading-tight dark:text-white">Membangun Bisnis yang Tahan Banting di Era Digital</h2>
-                <p className="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed text-lg italic">
-                  "Digitalisasi bukan lagi pilihan, melainkan keharusan. Namun, strategi yang tepat adalah kunci kemenangan..."
-                </p>
-                <div className="flex items-center gap-4">
-                  <button className="text-primary font-bold flex items-center gap-2 group">
-                    Baca Selengkapnya
-                    <span className="material-symbols-outlined transition-transform duration-300 group-hover:translate-x-1.5">arrow_forward</span>
-                  </button>
+        {featuredPost && (
+          <section className="py-16 -mt-12 relative z-10 px-4">
+            <div className="max-w-7xl mx-auto">
+              <Link href={`/blog/${featuredPost.slug}`} className="bg-white dark:bg-slate-900 rounded-[40px] overflow-hidden shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col lg:flex-row hover:shadow-primary/5 transition-all duration-500 block relative group">
+                <div className="lg:w-1/2 h-64 lg:h-auto relative overflow-hidden bg-slate-100 dark:bg-slate-800">
+                  {featuredPost.featured_image ? (
+                    <img
+                      src={`/storage/${featuredPost.featured_image}`}
+                      alt={featuredPost.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <span className="material-symbols-outlined text-6xl text-slate-300">image</span>
+                    </div>
+                  )}
                 </div>
-              </div>
+                <div className="lg:w-1/2 p-8 md:p-12 lg:p-16 flex flex-col justify-center">
+                  <span className="text-primary font-black text-xs uppercase tracking-widest mb-4">Artikel Pilihan</span>
+                  <h2 className="text-3xl md:text-4xl font-black mb-6 leading-tight dark:text-white group-hover:text-primary transition-colors">{featuredPost.title}</h2>
+                  <p className="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed text-lg line-clamp-3">
+                    {featuredPost.excerpt}
+                  </p>
+                  <div className="flex items-center gap-4">
+                    <span className="text-primary font-bold flex items-center gap-2">
+                      Baca Selengkapnya
+                      <span className="material-symbols-outlined transition-transform duration-300 group-hover:translate-x-1.5">arrow_forward</span>
+                    </span>
+                  </div>
+                </div>
+              </Link>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* Blog Feed */}
         <section className="py-20">
@@ -112,32 +71,35 @@ export default function BlogPage() {
                 <h2 className="text-3xl font-black mb-2 dark:text-white">Terbitan Terbaru</h2>
                 <p className="text-slate-500">Artikel edukasi harian untuk kemajuan usaha Anda.</p>
               </div>
-              <div className="flex bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl">
-                <button className="px-6 py-2.5 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-xl shadow-sm font-bold text-sm">Semua</button>
-                <button className="px-6 py-2.5 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 font-bold text-sm">Edukasi</button>
-                <button className="px-6 py-2.5 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 font-bold text-sm">Tips</button>
-              </div>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-              {posts.map((post) => (
-                <div key={post.id} className="group bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 hover:border-primary/20 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300 cursor-pointer">
-                  <div className="relative h-56 overflow-hidden">
-                    <img
-                      src={post.image}
-                      alt={post.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
-                    <div className="absolute top-4 left-4">
-                      <span className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider text-primary shadow-sm">
-                        {post.category}
-                      </span>
-                    </div>
+              {posts.data.length > 0 ? posts.data.map((post) => (
+                <Link href={`/blog/${post.slug}`} key={post.id} className="group bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 hover:border-primary/20 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300 cursor-pointer block">
+                  <div className="relative h-56 overflow-hidden bg-slate-50 dark:bg-slate-800/50">
+                    {post.featured_image ? (
+                      <img
+                        src={`/storage/${post.featured_image}`}
+                        alt={post.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-slate-300">
+                        <span className="material-symbols-outlined text-4xl">article</span>
+                      </div>
+                    )}
+                    {post.categories && post.categories.length > 0 && (
+                      <div className="absolute top-4 left-4">
+                        <span className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider text-primary shadow-sm">
+                          {post.categories[0].name}
+                        </span>
+                      </div>
+                    )}
                   </div>
                   <div className="p-8">
                     <div className="flex items-center gap-2 text-[11px] text-slate-400 font-bold mb-4">
                       <span className="material-symbols-outlined text-[14px]">calendar_today</span>
-                      {post.date}
+                      {new Date(post.published_at || post.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </div>
                     <h3 className="dark:text-white text-xl font-bold mb-4 line-clamp-2 leading-tight group-hover:text-primary transition-colors">
                       {post.title}
@@ -146,15 +108,21 @@ export default function BlogPage() {
                       {post.excerpt}
                     </p>
                   </div>
+                </Link>
+              )) : (
+                <div className="col-span-full py-20 text-center">
+                  <p className="text-slate-500 font-bold">Belum ada artikel yang diterbitkan saat ini.</p>
                 </div>
-              ))}
+              )}
             </div>
 
-            <div className="mt-20 text-center">
-              <button className="dark:text-white border-2 border-slate-200 dark:border-slate-800 hover:border-primary px-10 py-4 rounded-xl font-bold transition-all duration-300 hover:-translate-y-1">
-                Tampilkan Lebih Banyak
-              </button>
-            </div>
+            {posts.next_page_url && (
+              <div className="mt-20 text-center">
+                <Link href={posts.next_page_url} className="dark:text-white border-2 border-slate-200 dark:border-slate-800 hover:border-primary px-10 py-4 rounded-xl font-bold transition-all duration-300 hover:-translate-y-1 inline-block">
+                  Tampilkan Lebih Banyak
+                </Link>
+              </div>
+            )}
           </div>
         </section>
 

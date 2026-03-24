@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->enum('billing_cycle', ['monthly', 'annually', 'one_time']);
             $table->integer('price');
             $table->integer('original_price')->nullable();
+            $table->softDeletes();
             $table->userstamps();
             $table->userstampSoftDeletes();
             $table->timestamps();

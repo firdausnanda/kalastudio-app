@@ -41,7 +41,35 @@ class LandingController extends Controller
 
     public function blog()
     {
-        return Inertia::render('Landing/Blog');
+        $featuredPost = \App\Models\BlogPost::with('categories')
+            ->where('status', 'published')
+            ->latest('published_at')
+            ->first();
+
+        $posts = \App\Models\BlogPost::with('categories')
+            ->where('status', 'published')
+            ->when($featuredPost, function ($query, $featured) {
+                return $query->where('id', '!=', $featured->id);
+            })
+            ->latest('published_at')
+            ->paginate(9);
+
+        return Inertia::render('Landing/Blog', [
+            'featuredPost' => $featuredPost,
+            'posts' => $posts
+        ]);
+    }
+
+    public function showPost($slug)
+    {
+        $post = \App\Models\BlogPost::with(['categories', 'author', 'tags'])
+            ->where('slug', $slug)
+            ->where('status', 'published')
+            ->firstOrFail();
+
+        return Inertia::render('Landing/BlogPost', [
+            'post' => $post
+        ]);
     }
 
     public function panduan()

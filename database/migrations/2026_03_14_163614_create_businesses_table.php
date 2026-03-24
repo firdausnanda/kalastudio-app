@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('name'); // Contoh: "Toko Baju A"
             $table->string('type'); // Contoh: "Retail", "Agency", "F&B"
             $table->text('address'); // Contoh: "Jl. Sudirman No. 123"
+            $table->softDeletes();
             $table->userstamps();
             $table->userstampSoftDeletes();
             $table->timestamps();
