@@ -126,27 +126,6 @@ export default function BlogPage({ featuredPost, posts }) {
           </div>
         </section>
 
-        {/* Newsletter CTA */}
-        <section className="py-24 bg-primary relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
-
-          <div className="max-w-4xl mx-auto px-4 relative z-10 text-center">
-            <h2 className="text-3xl md:text-4xl font-black text-white mb-6">Jangan Ketinggalan Tips Eksklusif!</h2>
-            <p className="text-white/80 mb-10 text-lg">Dapatkan berita UMKM dan edukasi keuangan setiap minggunya langsung ke email Anda.</p>
-            <form className="flex flex-col sm:flex-row gap-4">
-              <input
-                type="email"
-                placeholder="Masukkan alamat email..."
-                className="flex-grow px-6 py-5 rounded-2xl bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:bg-white focus:text-slate-900 outline-none transition-all focus:ring-4 focus:ring-white/20"
-              />
-              <button className="bg-white text-primary px-10 py-5 rounded-2xl font-black shadow-xl hover:-translate-y-1 active:scale-95 transition-all">
-                Berlangganan
-              </button>
-            </form>
-          </div>
-        </section>
-
         <BottomCTA />
       </main>
 

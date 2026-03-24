@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from "@inertiajs/react";
 
 export default function Hero() {
   const [step, setStep] = useState(0);
@@ -37,9 +38,9 @@ export default function Hero() {
               <button className="bg-primary hover:bg-primary/90 text-white px-10 py-4 rounded-xl font-bold text-lg shadow-xl shadow-primary/30 dark:shadow-primary/20 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/40 hover:-translate-y-1 active:translate-y-0 active:scale-[0.98]">
                 Coba Gratis Sekarang
               </button>
-              <button className="border-2 border-slate-200 dark:border-slate-700 hover:border-secondary dark:hover:border-slate-500 text-secondary dark:text-slate-200 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300">
-                Jadwalkan Demo
-              </button>
+              <Link href={route('kontak')} className="border-2 border-slate-200 dark:border-slate-700 hover:border-secondary dark:hover:border-slate-500 text-secondary dark:text-slate-200 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300">
+                Hubungi Kami
+              </Link>
             </div>
           </div>
           <div className="relative flex justify-center lg:justify-end">
