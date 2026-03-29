@@ -219,62 +219,116 @@ export default function CategoryIndex({ auth, categories }) {
 
             <Modal show={isCreateModalOpen} onClose={closeCreateModal}>
                 <form onSubmit={submitCreate} className="p-8">
-                    <h2 className="text-2xl font-black mb-6">Tambah Kategori</h2>
-                    <div className="space-y-4">
+                    <div className="flex items-center justify-between mb-8">
                         <div>
-                            <InputLabel value="Nama Kategori" />
+                            <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Tambah Kategori</h2>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">Buat kategori baru untuk artikel blog Anda.</p>
+                        </div>
+                        <button 
+                            type="button" 
+                            onClick={closeCreateModal}
+                            className="w-10 h-10 flex items-center justify-center rounded-2xl bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-white transition-all shadow-sm"
+                        >
+                            <span className="material-symbols-outlined">close</span>
+                        </button>
+                    </div>
+
+                    <div className="space-y-6">
+                        <div>
+                            <InputLabel value="Nama Kategori" className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 ml-1" />
                             <TextInput
-                                className="w-full mt-1"
+                                className="w-full px-5 py-3 rounded-2xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-red-500/20 transition-all text-sm font-bold"
                                 value={form.data.name}
                                 onChange={e => form.setData('name', e.target.value)}
+                                placeholder="Masukkan nama kategori..."
                             />
                             <InputError message={form.errors.name} className="mt-2" />
                         </div>
                         <div>
-                            <InputLabel value="Deskripsi" />
+                            <InputLabel value="Deskripsi" className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 ml-1" />
                             <textarea
-                                className="w-full mt-1 px-4 py-2 border-slate-200 rounded-xl focus:border-red-500 focus:ring-red-500/20"
+                                className="w-full px-5 py-3 rounded-2xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-red-500/20 transition-all text-sm font-bold min-h-[120px]"
                                 value={form.data.description}
                                 onChange={e => form.setData('description', e.target.value)}
                                 rows="3"
+                                placeholder="Masukkan deskripsi kategori (opsional)..."
                             ></textarea>
                             <InputError message={form.errors.description} className="mt-2" />
                         </div>
                     </div>
-                    <div className="mt-8 flex gap-3">
-                        <SecondaryButton onClick={closeCreateModal} className="w-full justify-center">Batal</SecondaryButton>
-                        <PrimaryButton disabled={form.processing} className="w-full justify-center">Simpan</PrimaryButton>
+                    <div className="flex items-center gap-3 mt-10">
+                        <SecondaryButton 
+                            type="button" 
+                            onClick={closeCreateModal} 
+                            className="flex-1 justify-center py-3.5 rounded-2xl font-black uppercase tracking-widest text-[11px] border-slate-200"
+                        >
+                            Batal
+                        </SecondaryButton>
+                        <PrimaryButton 
+                            type="submit" 
+                            className="flex-1 justify-center py-3.5 rounded-2xl font-black uppercase tracking-widest text-[11px] bg-red-500 hover:bg-red-600 active:bg-red-700 shadow-xl shadow-red-500/20" 
+                            disabled={form.processing}
+                        >
+                            {form.processing ? 'Menyimpan...' : 'Simpan'}
+                        </PrimaryButton>
                     </div>
                 </form>
             </Modal>
 
             <Modal show={isEditModalOpen} onClose={closeEditModal}>
                 <form onSubmit={submitEdit} className="p-8">
-                    <h2 className="text-2xl font-black mb-6">Edit Kategori</h2>
-                    <div className="space-y-4">
+                    <div className="flex items-center justify-between mb-8">
                         <div>
-                            <InputLabel value="Nama Kategori" />
+                            <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Edit Kategori</h2>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">Perbarui informasi kategori "{selectedCategory?.name}".</p>
+                        </div>
+                        <button 
+                            type="button" 
+                            onClick={closeEditModal}
+                            className="w-10 h-10 flex items-center justify-center rounded-2xl bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-white transition-all shadow-sm"
+                        >
+                            <span className="material-symbols-outlined">close</span>
+                        </button>
+                    </div>
+
+                    <div className="space-y-6">
+                        <div>
+                            <InputLabel value="Nama Kategori" className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 ml-1" />
                             <TextInput
-                                className="w-full mt-1"
+                                className="w-full px-5 py-3 rounded-2xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-red-500/20 transition-all text-sm font-bold"
                                 value={form.data.name}
                                 onChange={e => form.setData('name', e.target.value)}
+                                placeholder="Masukkan nama kategori..."
                             />
                             <InputError message={form.errors.name} className="mt-2" />
                         </div>
                         <div>
-                            <InputLabel value="Deskripsi" />
+                            <InputLabel value="Deskripsi" className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 ml-1" />
                             <textarea
-                                className="w-full mt-1 px-4 py-2 border-slate-200 rounded-xl focus:border-red-500 focus:ring-red-500/20"
+                                className="w-full px-5 py-3 rounded-2xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-red-500/20 transition-all text-sm font-bold min-h-[120px]"
                                 value={form.data.description}
                                 onChange={e => form.setData('description', e.target.value)}
                                 rows="3"
+                                placeholder="Masukkan deskripsi kategori (opsional)..."
                             ></textarea>
                             <InputError message={form.errors.description} className="mt-2" />
                         </div>
                     </div>
-                    <div className="mt-8 flex gap-3">
-                        <SecondaryButton onClick={closeEditModal} className="w-full justify-center">Batal</SecondaryButton>
-                        <PrimaryButton disabled={form.processing} className="w-full justify-center">Simpan Perubahan</PrimaryButton>
+                    <div className="flex items-center gap-3 mt-10">
+                        <SecondaryButton 
+                            type="button" 
+                            onClick={closeEditModal} 
+                            className="flex-1 justify-center py-3.5 rounded-2xl font-black uppercase tracking-widest text-[11px] border-slate-200"
+                        >
+                            Batal
+                        </SecondaryButton>
+                        <PrimaryButton 
+                            type="submit" 
+                            className="flex-1 justify-center py-3.5 rounded-2xl font-black uppercase tracking-widest text-[11px] bg-red-500 hover:bg-red-600 active:bg-red-700 shadow-xl shadow-red-500/20" 
+                            disabled={form.processing}
+                        >
+                            {form.processing ? 'Menyimpan...' : 'Simpan Perubahan'}
+                        </PrimaryButton>
                     </div>
                 </form>
             </Modal>

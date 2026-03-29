@@ -29,6 +29,7 @@ Route::get('/integrasi-wa', [LandingController::class, 'integrasiWA'])->name('in
 Route::get('/tentang-kami', [LandingController::class, 'tentangKami'])->name('tentang-kami');
 Route::get('/karier', [LandingController::class, 'karier'])->name('karier');
 Route::get('/kontak', [LandingController::class, 'kontak'])->name('kontak');
+Route::post('/kontak', [LandingController::class, 'storeKontak'])->name('kontak.store');
 Route::get('/syarat-ketentuan', [LandingController::class, 'syaratKetentuan'])->name('syarat-ketentuan');
 Route::get('/kebijakan-privasi', [LandingController::class, 'kebijakanPrivasi'])->name('kebijakan-privasi');
 
@@ -85,6 +86,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('blog-categories', \App\Http\Controllers\Admin\Blog\CategoryController::class)->except(['create', 'show', 'edit']);
     Route::resource('blog-tags', \App\Http\Controllers\Admin\Blog\TagController::class)->except(['create', 'show', 'edit']);
     Route::resource('blog-posts', \App\Http\Controllers\Admin\Blog\PostController::class)->except(['show']);
+
+    // Broadcast
+    Route::resource('broadcasts', \App\Http\Controllers\Admin\BroadcastController::class)->except(['edit', 'update']);
+
+    // Contact
+    Route::resource('contacts', \App\Http\Controllers\Admin\ContactController::class)->only(['index', 'show', 'destroy']);
 });
 
 require __DIR__ . '/auth.php';

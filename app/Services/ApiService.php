@@ -151,9 +151,9 @@ class ApiService
   public function fetchDashboardData(string $phone)
   {
     $responses = Http::pool(fn(Pool $pool) => [
-      $pool->withToken($this->token)->get($this->baseUrl . "/api/laporan/{$phone}/chart/mingguan"),
-      $pool->withToken($this->token)->get($this->baseUrl . "/api/transaksi/{$phone}/summary"),
-      $pool->withToken($this->token)->get($this->baseUrl . "/api/transaksi/{$phone}/full"),
+    $pool->withToken($this->token)->get($this->baseUrl . "/api/laporan/{$phone}/chart/mingguan"),
+    $pool->withToken($this->token)->get($this->baseUrl . "/api/transaksi/{$phone}/summary"),
+    $pool->withToken($this->token)->get($this->baseUrl . "/api/transaksi/{$phone}/full"),
     ]);
 
     return [
@@ -207,9 +207,9 @@ class ApiService
   public function fetchLaporanData(string $phone, string $month)
   {
     $responses = Http::pool(fn(Pool $pool) => [
-      $pool->withToken($this->token)->get($this->baseUrl . "/api/transaksi/{$phone}/summary"),
-      $pool->withToken($this->token)->get($this->baseUrl . "/api/laporan/{$phone}/chart/bulanan?bulan={$month}"),
-      $pool->withToken($this->token)->get($this->baseUrl . "/api/anomali/{$phone}/insight"),
+    $pool->withToken($this->token)->get($this->baseUrl . "/api/transaksi/{$phone}/summary"),
+    $pool->withToken($this->token)->get($this->baseUrl . "/api/laporan/{$phone}/chart/bulanan?bulan={$month}"),
+    $pool->withToken($this->token)->get($this->baseUrl . "/api/anomali/{$phone}/insight"),
     ]);
 
     return [
@@ -239,6 +239,29 @@ class ApiService
     $response = Http::withToken($this->token)->post("{$this->baseUrl}/api/users/{$phone}/add-tokens", [
       'tokens' => $tokens,
     ]);
+
+    return $response->json();
+  }
+
+  /**
+   * Send data to API Eksternal
+   */
+  public function sendData($phone, $text)
+  {
+    $response = Http::withToken($this->token)->post("{$this->baseUrl}/api/wa/send", [
+      'to' => $phone,
+      'text' => $text,
+      'type' => 'text',
+    ]);
+
+    //example body
+    /*
+     {
+     "to": "628123456789",
+     "text": "Halo, ini pesan dari Kalastudio!",
+     "type": "text"     
+     }
+     */
 
     return $response->json();
   }

@@ -1,31 +1,38 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useForm, usePage } from '@inertiajs/react';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
+import { toast, Toaster } from 'sonner';
 
 export default function ContactPage() {
+  const { flash } = usePage().props;
+
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+    if (flash?.success) {
+      toast.success(flash.success);
+    }
+  }, [flash]);
 
-  const [formState, setFormState] = useState({
+  const { data, setData, post, processing, errors, reset } = useForm({
     name: '',
     email: '',
+    phone: '',
     subject: '',
     message: ''
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    alert('Terima kasih! Pesan Anda telah terkirim.');
-    setFormState({ name: '', email: '', subject: '', message: '' });
+    post(route('kontak.store'), {
+      onSuccess: () => {
+        reset();
+      },
+    });
   };
 
   const handleChange = (e) => {
-    setFormState({
-      ...formState,
-      [e.target.name]: e.target.value
-    });
+    setData(e.target.name, e.target.value);
   };
 
   const contactInfos = [
@@ -72,6 +79,7 @@ export default function ContactPage() {
 
   return (
     <div className="bg-white text-slate-900 font-display transition-colors duration-300 dark:bg-slate-900 min-h-screen flex flex-col">
+      <Toaster position="top-center" richColors />
       <Header />
 
       <main className="flex-grow">
@@ -154,56 +162,74 @@ export default function ContactPage() {
                       <input
                         type="text"
                         name="name"
-                        value={formState.name}
+                        value={data.name}
                         onChange={handleChange}
                         required
                         placeholder="Contoh: Budi Santoso"
-                        className="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all dark:text-white"
+                        className={`w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all dark:text-white ${errors.name ? 'ring-2 ring-red-500' : ''}`}
                       />
+                      {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name}</p>}
                     </div>
                     <div>
                       <label className="block text-sm font-bold mb-2 text-slate-700 dark:text-slate-300">Alamat Email</label>
                       <input
                         type="email"
                         name="email"
-                        value={formState.email}
+                        value={data.email}
                         onChange={handleChange}
                         required
                         placeholder="budi@email.com"
-                        className="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all dark:text-white"
+                        className={`w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all dark:text-white ${errors.email ? 'ring-2 ring-red-500' : ''}`}
                       />
+                      {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email}</p>}
                     </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold mb-2 text-slate-700 dark:text-slate-300">Nomor WhatsApp</label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={data.phone}
+                      onChange={handleChange}
+                      required
+                      placeholder="Contoh: 08123456789"
+                      className={`w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all dark:text-white ${errors.phone ? 'ring-2 ring-red-500' : ''}`}
+                    />
+                    {errors.phone && <p className="text-xs text-red-500 mt-1">{errors.phone}</p>}
                   </div>
                   <div>
                     <label className="block text-sm font-bold mb-2 text-slate-700 dark:text-slate-300">Subjek</label>
                     <input
                       type="text"
                       name="subject"
-                      value={formState.subject}
+                      value={data.subject}
                       onChange={handleChange}
                       required
                       placeholder="Apa yang ingin Anda tanyakan?"
-                      className="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all dark:text-white"
+                      className={`w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all dark:text-white ${errors.subject ? 'ring-2 ring-red-500' : ''}`}
                     />
+                    {errors.subject && <p className="text-xs text-red-500 mt-1">{errors.subject}</p>}
                   </div>
                   <div>
                     <label className="block text-sm font-bold mb-2 text-slate-700 dark:text-slate-300">Pesan</label>
                     <textarea
                       rows="5"
                       name="message"
-                      value={formState.message}
+                      value={data.message}
                       onChange={handleChange}
                       required
                       placeholder="Tuliskan pesan Anda di sini..."
-                      className="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all dark:text-white resize-none"
+                      className={`w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border-none outline-none focus:ring-2 focus:ring-primary/20 transition-all dark:text-white resize-none ${errors.message ? 'ring-2 ring-red-500' : ''}`}
                     ></textarea>
+                    {errors.message && <p className="text-xs text-red-500 mt-1">{errors.message}</p>}
                   </div>
                   <button
                     type="submit"
-                    className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-5 rounded-[20px] shadow-xl shadow-primary/20 transition-all hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3"
+                    disabled={processing}
+                    className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-5 rounded-[20px] shadow-xl shadow-primary/20 transition-all hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed"
                   >
-                    <span className="material-symbols-outlined">send</span>
-                    Kirim Pesan Sekarang
+                    <span className="material-symbols-outlined">{processing ? 'sync' : 'send'}</span>
+                    {processing ? 'Sedang Mengirim...' : 'Kirim Pesan Sekarang'}
                   </button>
                 </form>
               </div>

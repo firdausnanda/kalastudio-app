@@ -3,14 +3,14 @@ import { Head, Link } from '@inertiajs/react';
 import AdminHeader from '@/Components/Admin/AdminHeader';
 import AdminSidebar from '@/Components/Admin/AdminSidebar';
 import DashboardFooter from '@/Components/DashboardFooter';
-import { 
-    AreaChart, 
-    Area, 
-    XAxis, 
-    YAxis, 
-    CartesianGrid, 
-    Tooltip, 
-    ResponsiveContainer 
+import {
+    AreaChart,
+    Area,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    ResponsiveContainer
 } from 'recharts';
 
 export default function AdminDashboard({ stats, recent_users }) {
@@ -30,7 +30,7 @@ export default function AdminDashboard({ stats, recent_users }) {
     }, []);
 
     // Use real transaction data from backend
-    const chartData = stats.monthly_transactions?.length > 0 
+    const chartData = stats.monthly_transactions?.length > 0
         ? stats.monthly_transactions.map(item => ({
             name: item.month,
             total: parseFloat(item.total)
@@ -52,29 +52,29 @@ export default function AdminDashboard({ stats, recent_users }) {
     };
 
     const statCards = [
-        { 
-            name: 'Total Pengguna', 
-            value: stats.total_users, 
+        {
+            name: 'Total Pengguna',
+            value: stats.total_users,
             growth: stats.users_growth,
-            icon: 'group', 
+            icon: 'group',
             color: 'from-blue-600 to-indigo-600',
             bgColor: 'bg-blue-500/10',
             textColor: 'text-blue-600'
         },
-        { 
-            name: 'Total Bisnis', 
-            value: stats.total_businesses, 
+        {
+            name: 'Total Bisnis',
+            value: stats.total_businesses,
             growth: stats.businesses_growth,
-            icon: 'business', 
+            icon: 'business',
             color: 'from-emerald-500 to-teal-600',
             bgColor: 'bg-emerald-500/10',
             textColor: 'text-emerald-600'
         },
-        { 
-            name: 'Transaksi Bulan Ini', 
-            value: formatCurrency(stats.total_monthly_paid ?? 0), 
+        {
+            name: 'Transaksi Bulan Ini',
+            value: formatCurrency(stats.total_monthly_paid ?? 0),
             growth: stats.paid_growth,
-            icon: 'payments', 
+            icon: 'payments',
             color: 'from-amber-500 to-orange-600',
             bgColor: 'bg-amber-500/10',
             textColor: 'text-amber-600'
@@ -144,7 +144,7 @@ export default function AdminDashboard({ stats, recent_users }) {
                                 <div className="flex items-center justify-between mb-8">
                                     <div>
                                         <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">Statistik Transaksi</h3>
-                                        <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Total transaksi PAID 6 bulan terakhir</p>
+                                        <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Total pembayaran 6 bulan terakhir</p>
                                     </div>
                                     <select className="bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-xs font-bold py-2 px-4 focus:ring-2 focus:ring-primary/20 transition-all">
                                         <option>Januari - Mei</option>
@@ -156,29 +156,29 @@ export default function AdminDashboard({ stats, recent_users }) {
                                         <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                                             <defs>
                                                 <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="5%" stopColor="#6366f1" stopOpacity={0.1}/>
-                                                    <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
+                                                    <stop offset="5%" stopColor="#6366f1" stopOpacity={0.1} />
+                                                    <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
                                                 </linearGradient>
                                             </defs>
                                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                            <XAxis 
-                                                dataKey="name" 
-                                                axisLine={false} 
-                                                tickLine={false} 
+                                            <XAxis
+                                                dataKey="name"
+                                                axisLine={false}
+                                                tickLine={false}
                                                 tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 600 }}
                                                 dy={10}
                                             />
-                                            <YAxis 
-                                                axisLine={false} 
-                                                tickLine={false} 
+                                            <YAxis
+                                                axisLine={false}
+                                                tickLine={false}
                                                 tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 600 }}
                                                 dx={-10}
                                             />
-                                            <Tooltip 
-                                                contentStyle={{ 
-                                                    backgroundColor: '#1e293b', 
-                                                    border: 'none', 
-                                                    borderRadius: '16px', 
+                                            <Tooltip
+                                                contentStyle={{
+                                                    backgroundColor: '#1e293b',
+                                                    border: 'none',
+                                                    borderRadius: '16px',
                                                     color: '#fff',
                                                     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
                                                 }}
@@ -186,13 +186,13 @@ export default function AdminDashboard({ stats, recent_users }) {
                                                 labelStyle={{ color: '#94a3b8', marginBottom: '4px', fontSize: '10px' }}
                                                 formatter={(value) => formatCurrency(value)}
                                             />
-                                            <Area 
-                                                type="monotone" 
-                                                dataKey="total" 
-                                                stroke="#6366f1" 
+                                            <Area
+                                                type="monotone"
+                                                dataKey="total"
+                                                stroke="#6366f1"
                                                 strokeWidth={4}
-                                                fillOpacity={1} 
-                                                fill="url(#colorUsers)" 
+                                                fillOpacity={1}
+                                                fill="url(#colorUsers)"
                                                 animationDuration={2000}
                                             />
                                         </AreaChart>
@@ -226,8 +226,8 @@ export default function AdminDashboard({ stats, recent_users }) {
                                     <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">Pengguna Terbaru</h3>
                                     <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Monitoring registrasi akun baru</p>
                                 </div>
-                                <Link 
-                                    href="/admin/users" 
+                                <Link
+                                    href="/admin/users"
                                     className="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-black text-slate-600 dark:text-slate-300 uppercase tracking-widest rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-sm"
                                 >
                                     Lihat Semua
