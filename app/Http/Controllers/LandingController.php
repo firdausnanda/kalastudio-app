@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Career;
+use App\Models\CareerApplication;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Storage;
 
 class LandingController extends Controller
 {
@@ -94,7 +97,50 @@ class LandingController extends Controller
 
     public function karier()
     {
-        return Inertia::render('Landing/Karier');
+        $jobs = Career::where('is_active', true)
+            ->where('is_expired', false)
+            ->latest()
+            ->get();
+
+        return Inertia::render('Landing/Karier', [
+            'jobs' => $jobs
+        ]);
+    }
+
+    public function karierDetail($slug)
+    {
+        $job = Career::where('slug', $slug)
+            ->where('is_active', true)
+            ->firstOrFail();
+
+        return Inertia::render('Landing/Career/Show', [
+            'job' => $job
+        ]);
+    }
+
+    public function storeKarierApplication(Request $request, Career $career)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:20',
+            'resume' => 'required|file|mimes:pdf,doc,docx|max:2048',
+            'cover_letter' => 'nullable|string',
+        ]);
+
+        $resumePath = $request->file('resume')->store('careers/resumes', 'public');
+
+        CareerApplication::create([
+            'career_id' => $career->id,
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'resume_path' => $resumePath,
+            'cover_letter' => $request->cover_letter,
+            'status' => 'pending',
+        ]);
+
+        return back()->with('success', 'Aplikasi Anda telah berhasil dikirim. Tim kami akan segera meninjau profil Anda.');
     }
 
     public function kontak()

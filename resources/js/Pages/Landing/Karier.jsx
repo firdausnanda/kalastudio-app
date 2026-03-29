@@ -3,7 +3,9 @@ import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import BottomCTA from '@/Components/BottomCTA';
 
-export default function CareerPage() {
+import { Head, Link } from '@inertiajs/react';
+
+export default function CareerPage({ jobs }) {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -39,40 +41,7 @@ export default function CareerPage() {
     }
   ];
 
-  const jobs = [
-    // {
-    //   id: 1,
-    //   title: "Senior Frontend Engineer",
-    //   department: "Engineering",
-    //   location: "Remote / Jakarta",
-    //   type: "Full-time",
-    //   description: "Membangun antarmuka yang indah dan responsif untuk platform KalaStudio menggunakan React dan Tailwind CSS."
-    // },
-    // {
-    //   id: 2,
-    //   title: "AI Researcher & Prompt Engineer",
-    //   department: "Product",
-    //   location: "Remote",
-    //   type: "Full-time",
-    //   description: "Menyempurnakan model AI kami untuk memahami konteks finansial yang tidak terstruktur dari log WhatsApp."
-    // },
-    // {
-    //   id: 3,
-    //   title: "Product Marketing Specialist",
-    //   department: "Marketing",
-    //   location: "Jakarta",
-    //   type: "Full-time",
-    //   description: "Merancang dan mengeksekusi kampanye pemasaran digital untuk meningkatkan adopsi di pasar UMKM."
-    // },
-    // {
-    //   id: 4,
-    //   title: "Customer Success Associate",
-    //   department: "Operations",
-    //   location: "Remote",
-    //   type: "Full-time",
-    //   description: "Membantu pengguna baru melakukan onboarding dan memastikan mereka mendapatkan nilai maksimal dari KalaStudio."
-    // }
-  ];
+  // Jobs are now passed as a prop
 
   return (
     <div className="bg-white text-slate-900 font-display transition-colors duration-300 dark:bg-slate-900 min-h-screen flex flex-col">
@@ -198,9 +167,12 @@ export default function CareerPage() {
                         <span className="material-symbols-outlined text-[20px] mr-1">location_on</span>
                         {job.location}
                       </div>
-                      <button className="w-full sm:w-auto px-6 py-3 bg-slate-100 hover:bg-primary dark:bg-slate-800 dark:hover:bg-primary text-slate-700 hover:text-white dark:text-slate-300 dark:hover:text-white rounded-xl font-bold transition-colors duration-300">
+                      <Link 
+                        href={route('karier.show', job.slug)}
+                        className="w-full sm:w-auto px-6 py-3 bg-slate-100 hover:bg-primary dark:bg-slate-800 dark:hover:bg-primary text-slate-700 hover:text-white dark:text-slate-300 dark:hover:text-white rounded-xl font-bold transition-colors duration-300 text-center"
+                      >
                         Lamar Sekarang
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 ))

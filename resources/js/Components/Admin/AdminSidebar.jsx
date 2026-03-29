@@ -7,6 +7,7 @@ export default function AdminSidebar({ isSidebarOpen }) {
 
   // State for Blog dropdown
   const [isBlogOpen, setIsBlogOpen] = useState(currentPath.startsWith('/admin/blog-'));
+  const [isCareerOpen, setIsCareerOpen] = useState(currentPath.startsWith('/admin/career-'));
 
   const menuItems = [
     { name: 'Dashboard', icon: 'admin_panel_settings', to: '/admin/dashboard' },
@@ -24,6 +25,17 @@ export default function AdminSidebar({ isSidebarOpen }) {
         { name: 'Artikel Blog', to: '/admin/blog-posts' },
         { name: 'Kategori Blog', to: '/admin/blog-categories' },
         { name: 'Tag Blog', to: '/admin/blog-tags' },
+      ]
+    },
+    {
+      name: 'Karier',
+      icon: 'work',
+      isDropdown: true,
+      isOpen: isCareerOpen,
+      toggle: () => setIsCareerOpen(!isCareerOpen),
+      subItems: [
+        { name: 'Lowongan Kerja', to: '/admin/career-jobs' },
+        { name: 'Pelamar Kerja', to: '/admin/career-applications' },
       ]
     },
     { name: 'Activity Log', icon: 'history', to: '/admin/activity-logs' },

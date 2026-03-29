@@ -28,6 +28,8 @@ Route::get('/laporan-ai', [LandingController::class, 'laporanAI'])->name('lapora
 Route::get('/integrasi-wa', [LandingController::class, 'integrasiWA'])->name('integrasi-wa');
 Route::get('/tentang-kami', [LandingController::class, 'tentangKami'])->name('tentang-kami');
 Route::get('/karier', [LandingController::class, 'karier'])->name('karier');
+Route::get('/karier/{slug}', [LandingController::class, 'karierDetail'])->name('karier.show');
+Route::post('/karier/{career}/apply', [LandingController::class, 'storeKarierApplication'])->name('karier.apply');
 Route::get('/kontak', [LandingController::class, 'kontak'])->name('kontak');
 Route::post('/kontak', [LandingController::class, 'storeKontak'])->name('kontak.store');
 Route::get('/syarat-ketentuan', [LandingController::class, 'syaratKetentuan'])->name('syarat-ketentuan');
@@ -92,6 +94,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     // Contact
     Route::resource('contacts', \App\Http\Controllers\Admin\ContactController::class)->only(['index', 'show', 'destroy']);
+
+    // Careers
+    Route::resource('career-jobs', \App\Http\Controllers\Admin\Career\JobController::class)->except(['show']);
+    Route::resource('career-applications', \App\Http\Controllers\Admin\Career\ApplicationController::class)->only(['index', 'show', 'update', 'destroy']);
 });
 
 require __DIR__ . '/auth.php';

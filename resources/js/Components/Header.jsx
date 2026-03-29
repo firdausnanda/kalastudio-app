@@ -34,6 +34,7 @@ export default function Header() {
     { name: 'Partnership', to: '/partnership' },
     { name: 'Harga', to: '/harga' },
     { name: 'Blog', to: '/blog' },
+    { name: 'Karier', to: '/karier' },
     { name: 'Panduan', to: '/panduan' },
   ];
 
