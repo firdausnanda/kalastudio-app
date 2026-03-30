@@ -54,7 +54,7 @@ export default function ContactPage() {
       icon: 'location_on',
       title: 'Kantor Pusat',
       detail: 'Kab. Trenggalek, Jawa Timur, Indonesia',
-      link: '#',
+      link: 'https://maps.app.goo.gl/nRzUHghGCLWonRyt8',
       color: 'bg-blue-500/10 text-blue-500'
     }
   ];
@@ -237,14 +237,48 @@ export default function ContactPage() {
           </div>
         </section>
 
-        {/* Map Simulation */}
+        {/* Official Location Map */}
         <section className="py-20 px-4 bg-slate-50 dark:bg-slate-800/20">
           <div className="max-w-7xl mx-auto">
-            <div className="bg-slate-200 dark:bg-slate-800 h-[400px] rounded-[40px] flex items-center justify-center border-2 border-dashed border-slate-300 dark:border-slate-700 grayscale">
-              <div className="text-center text-slate-500">
-                <span className="material-symbols-outlined text-6xl mb-4">map</span>
-                <p className="text-lg font-bold">Google Maps</p>
-                <p className="text-sm">Lokasi Kantor: Kab. Trenggalek, Jawa Timur</p>
+            <div className="relative group">
+              <div className="absolute -inset-4 bg-gradient-to-r from-primary/10 to-blue-500/10 rounded-[48px] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="relative bg-white dark:bg-slate-800 h-[500px] rounded-[40px] overflow-hidden border border-slate-200 dark:border-slate-700 shadow-2xl">
+                <iframe 
+                  src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3950.489433612349!2d111.71271647499696!3d-8.05140519197607!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zOMKwMDMnMDUuMSJTIDExMcKwNDInNTUuMSJF!5e0!3m2!1sid!2sid!4v1774835738870!5m2!1sid!2sid" 
+                  className="w-full h-full grayscale-[20%] contrast-[1.1] brightness-[0.9] invert-[0] dark:invert-[0.9] dark:hue-rotate-[180deg]"
+                  style={{ border: 0 }} 
+                  allowFullScreen="" 
+                  loading="lazy" 
+                  referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
+                
+                {/* Map Overlay Button */}
+                <div className="absolute bottom-8 right-8">
+                  <a 
+                    href="https://maps.app.goo.gl/nRzUHghGCLWonRyt8" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-6 py-3 rounded-2xl font-bold shadow-2xl hover:bg-primary hover:text-white transition-all transform hover:-translate-y-1 active:scale-95 group/btn"
+                  >
+                    <span className="material-symbols-outlined text-primary group-hover/btn:text-white transition-colors">map</span>
+                    Buka di Google Maps
+                  </a>
+                </div>
+                
+                {/* Location Badge */}
+                <div className="absolute top-8 left-8 hidden md:block">
+                  <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-4 rounded-2xl border border-white/20 shadow-xl max-w-xs">
+                    <div className="flex gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                        <span className="material-symbols-outlined text-primary">location_on</span>
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest leading-tight">Kantor Kami</p>
+                        <p className="text-sm font-bold text-slate-700 dark:text-slate-100">Sumbergedong, Trenggalek</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

@@ -91,13 +91,6 @@ export default function AdminHeader({ isSidebarOpen, setIsSidebarOpen }) {
                       <p className="text-sm text-slate-500 truncate lowercase">{user?.email}</p>
                     </div>
                     <div className="p-2 space-y-1">
-                      <Link
-                        href={route('profile.edit')}
-                        className="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all font-bold group"
-                      >
-                        <span className="material-symbols-outlined text-xl group-hover:rotate-12 transition-transform">person</span>
-                        Profil Saya
-                      </Link>
                       <button
                         onClick={handleLogout}
                         className="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all font-bold group"

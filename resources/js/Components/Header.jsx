@@ -73,7 +73,7 @@ export default function Header() {
 
           {auth.user ? (
             <Link 
-              className="bg-slate-900 dark:bg-primary hover:bg-slate-800 dark:hover:bg-primary/90 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-slate-900/10 dark:shadow-primary/20 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] flex items-center gap-2" 
+              className="bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 transition-all duration-300 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] flex items-center gap-2" 
               href="/dashboard"
             >
               <span className="material-symbols-outlined text-lg">dashboard</span>
