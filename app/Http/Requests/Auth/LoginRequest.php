@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Services\ApiService;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -47,6 +48,17 @@ class LoginRequest extends FormRequest
 
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
+            ]);
+        }
+
+        // Get token from ApiService and save it to user
+        /** @var ApiService $apiService */
+        $apiService = app(ApiService::class);
+        $token = $apiService->authenticate($this->email, $this->password);
+
+        if ($token) {
+            Auth::user()->update([
+                'external_api_token' => $token,
             ]);
         }
 

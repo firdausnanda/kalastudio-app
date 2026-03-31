@@ -98,14 +98,6 @@ class AuthController extends Controller
                 'password' => Hash::make($request->password),
             ]);
 
-            UserDetail::create([
-                'user_id' => $user->id,
-                'phone' => $request->phone,
-                'address' => $request->address,
-                'business_name' => $request->business_name,
-                'business_type' => $request->business_type,
-            ]);
-
             $token = $user->createToken('auth_token')->plainTextToken;
 
             return response()->json([

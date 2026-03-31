@@ -263,6 +263,6 @@ class ApiService
      }
      */
 
-    return $response->json();
+    return $response;
   }
 }
