@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Link } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
+import Swal from 'sweetalert2';
 import Select from 'react-select';
 import DashboardHeader from '@/Components/DashboardHeader';
 import DashboardSidebar from '@/Components/DashboardSidebar';
@@ -42,8 +43,20 @@ export default function TransactionPage({ transaksi }) {
   ];
 
   const mapTransactions = (data) => {
-    if (data && data.success && data.data && Array.isArray(data.data.data)) {
-      return data.data.data.map(trx => ({
+    // Menentukan array transaksi yang sebenarnya
+    let rawTrx = [];
+    if (data) {
+      if (Array.isArray(data.data)) {
+        rawTrx = data.data; // Struktur: { success: true, data: [...] }
+      } else if (data.data && Array.isArray(data.data.data)) {
+        rawTrx = data.data.data; // Struktur: { success: true, data: { data: [...] } }
+      } else if (Array.isArray(data)) {
+        rawTrx = data; // Jika controller mengirimkan array-nya saja
+      }
+    }
+
+    if (rawTrx.length > 0) {
+      return rawTrx.map(trx => ({
         id: trx.id || Math.random(),
         date: new Date(trx.transaksi_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }),
         desc: trx.deskripsi || trx.kategori || 'Transaksi',
@@ -78,6 +91,62 @@ export default function TransactionPage({ transaksi }) {
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
     setCurrentPage(1);
+  };
+
+  const { flash } = usePage().props;
+
+  useEffect(() => {
+    if (flash.success) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: flash.success,
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        background: (typeof window !== 'undefined' && localStorage.getItem('theme') === 'dark') ? '#0f172a' : '#fff',
+        color: (typeof window !== 'undefined' && localStorage.getItem('theme') === 'dark') ? '#fff' : '#000',
+        customClass: {
+          popup: 'rounded-[32px] border border-slate-100 dark:border-slate-800'
+        }
+      });
+    }
+    if (flash.error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: flash.error,
+        background: (typeof window !== 'undefined' && localStorage.getItem('theme') === 'dark') ? '#0f172a' : '#fff',
+        color: (typeof window !== 'undefined' && localStorage.getItem('theme') === 'dark') ? '#fff' : '#000',
+        customClass: {
+          popup: 'rounded-[32px] border border-slate-100 dark:border-slate-800'
+        }
+      });
+    }
+  }, [flash]);
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: 'Hapus Transaksi?',
+      text: "Data yang dihapus tidak dapat dikembalikan!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#9C413D',
+      cancelButtonColor: '#94a3b8',
+      confirmButtonText: 'Ya, Hapus!',
+      cancelButtonText: 'Batal',
+      background: (typeof window !== 'undefined' && localStorage.getItem('theme') === 'dark') ? '#0f172a' : '#fff',
+      color: (typeof window !== 'undefined' && localStorage.getItem('theme') === 'dark') ? '#fff' : '#000',
+      customClass: {
+        popup: 'rounded-[32px] border border-slate-100 dark:border-slate-800',
+        confirmButton: 'rounded-xl px-6 py-3 font-bold',
+        cancelButton: 'rounded-xl px-6 py-3 font-bold'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        router.delete(route('transaksi.destroy', id));
+      }
+    });
   };
 
   const formatCurrency = (value) => {
@@ -257,10 +326,18 @@ export default function TransactionPage({ transaksi }) {
                           </td>
                           <td className="px-8 py-6">
                             <div className="flex items-center justify-center gap-2">
-                              <button className="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-all active:scale-90" title="Edit">
+                              <Link 
+                                href={route('transaksi.edit', trx.id)}
+                                className="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-all active:scale-90" 
+                                title="Edit"
+                              >
                                 <span className="material-symbols-outlined text-xl">edit_note</span>
-                              </button>
-                              <button className="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all active:scale-90" title="Hapus">
+                              </Link>
+                              <button 
+                                onClick={() => handleDelete(trx.id)}
+                                className="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all active:scale-90" 
+                                title="Hapus"
+                              >
                                 <span className="material-symbols-outlined text-xl">delete</span>
                               </button>
                             </div>

@@ -33,8 +33,8 @@ class DashboardController extends Controller
 
         return Inertia::render('Dashboard/Index', [
             'chartDataProp' => $dashboardData['weekly_report']['data'] ?? [],
-            'statsProp' => $dashboardData['summary']['data'] ?? [],
-            'transactionsProp' => $dashboardData['transactions']['data']['data'] ?? [],
+            'statsProp' => $dashboardData['summary'] ?? [],
+            'transactionsProp' => $dashboardData['transactions']['data'] ?? [],
         ]);
     }
 

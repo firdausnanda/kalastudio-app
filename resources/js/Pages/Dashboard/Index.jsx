@@ -115,25 +115,25 @@ export default function Dashboard({ chartDataProp, statsProp, transactionsProp }
 
   useEffect(() => {
     if (chartDataProp) {
-        const mapped = chartDataProp.map(d => {
-            let name = d.hari || d.tanggal || d.name || 'Day';
-            if (typeof name === 'string' && name.length > 3) {
-                name = name.substring(0, 3);
-            }
-            return {
-                name,
-                pemasukan: d.pemasukan || d.total_pemasukan || 0,
-                pengeluaran: d.pengeluaran || d.total_pengeluaran || 0,
-            };
-        });
+      const mapped = chartDataProp.map(d => {
+        let name = d.hari || d.tanggal || d.name || 'Day';
+        if (typeof name === 'string' && name.length > 3) {
+          name = name.substring(0, 3);
+        }
+        return {
+          name,
+          pemasukan: d.pemasukan || d.total_pemasukan || 0,
+          pengeluaran: d.pengeluaran || d.total_pengeluaran || 0,
+        };
+      });
 
-        const daysOrder = { 'Sen': 1, 'Sel': 2, 'Rab': 3, 'Kam': 4, 'Jum': 5, 'Sab': 6, 'Min': 7 };
-        mapped.sort((a, b) => {
-            const dayA = daysOrder[a.name] || 99;
-            const dayB = daysOrder[b.name] || 99;
-            return dayA - dayB;
-        });
-        setChartData(mapped);
+      const daysOrder = { 'Sen': 1, 'Sel': 2, 'Rab': 3, 'Kam': 4, 'Jum': 5, 'Sab': 6, 'Min': 7 };
+      mapped.sort((a, b) => {
+        const dayA = daysOrder[a.name] || 99;
+        const dayB = daysOrder[b.name] || 99;
+        return dayA - dayB;
+      });
+      setChartData(mapped);
     }
   }, [chartDataProp]);
 
@@ -151,29 +151,29 @@ export default function Dashboard({ chartDataProp, statsProp, transactionsProp }
 
   useEffect(() => {
     if (statsProp) {
-        setStats([
-            { label: 'Saldo Saat Ini', value: formatCurrency(statsProp.laba_bersih || 0), icon: 'account_balance_wallet', color: 'text-primary', bg: 'bg-primary/10' },
-            { label: `Pemasukan (${statsProp.bulan || 'Bulan Ini'})`, value: formatCurrency(statsProp.total_pemasukan || 0), icon: 'trending_up', color: 'text-green-500', bg: 'bg-green-500/10' },
-            { label: `Pengeluaran (${statsProp.bulan || 'Bulan Ini'})`, value: formatCurrency(statsProp.total_pengeluaran || 0), icon: 'trending_down', color: 'text-red-500', bg: 'bg-red-500/10' },
-            { label: 'Transaksi WA', value: `${statsProp.kuota?.terpakai || statsProp.jumlah_transaksi || 0} Pesan`, icon: 'chat', color: 'text-blue-500', bg: 'bg-blue-500/10' },
-        ]);
+      setStats([
+        { label: 'Saldo Saat Ini', value: formatCurrency(statsProp.laba_bersih || 0), icon: 'account_balance_wallet', color: 'text-primary', bg: 'bg-primary/10' },
+        { label: `Pemasukan (${statsProp.bulan || 'Bulan Ini'})`, value: formatCurrency(statsProp.total_pemasukan || 0), icon: 'trending_up', color: 'text-green-500', bg: 'bg-green-500/10' },
+        { label: `Pengeluaran (${statsProp.bulan || 'Bulan Ini'})`, value: formatCurrency(statsProp.total_pengeluaran || 0), icon: 'trending_down', color: 'text-red-500', bg: 'bg-red-500/10' },
+        { label: 'Transaksi WA', value: `${statsProp.kuota?.terpakai || statsProp.jumlah_transaksi || 0} Pesan`, icon: 'chat', color: 'text-blue-500', bg: 'bg-blue-500/10' },
+      ]);
     }
   }, [statsProp]);
 
   useEffect(() => {
     if (transactionsProp && Array.isArray(transactionsProp)) {
-        const mapped = transactionsProp.map(trx => ({
-            id: trx.id || Math.random().toString(),
-            type: trx.tipe === 'pengeluaran' ? 'out' : 'in',
-            category: trx.kategori || trx.deskripsi || 'Transaksi',
-            amount: formatCurrency(trx.total || 0),
-            date: new Date(trx.transaksi_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }),
-            via: trx.sumber_input || 'Sistem',
-            items: trx.items || [],
-            penyesuaian: trx.penyesuaian || []
-        }));
-        setTransactions(mapped);
-        setIsLoadingRx(false);
+      const mapped = transactionsProp.map(trx => ({
+        id: trx.id || Math.random().toString(),
+        type: trx.tipe === 'pengeluaran' ? 'out' : 'in',
+        category: trx.kategori || trx.deskripsi || 'Transaksi',
+        amount: formatCurrency(trx.total || 0),
+        date: new Date(trx.transaksi_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }),
+        via: trx.sumber_input || 'Sistem',
+        items: trx.items || [],
+        penyesuaian: trx.penyesuaian || []
+      }));
+      setTransactions(mapped);
+      setIsLoadingRx(false);
     }
   }, [transactionsProp]);
 

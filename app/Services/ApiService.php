@@ -151,9 +151,9 @@ class ApiService
   public function fetchDashboardData(string $phone)
   {
     $responses = Http::pool(fn(Pool $pool) => [
-    $pool->withToken($this->token)->get($this->baseUrl . "/api/laporan/{$phone}/chart/mingguan"),
-    $pool->withToken($this->token)->get($this->baseUrl . "/api/transaksi/{$phone}/summary"),
-    $pool->withToken($this->token)->get($this->baseUrl . "/api/transaksi/{$phone}/full"),
+      $pool->withToken($this->token)->get($this->baseUrl . "/api/laporan/{$phone}/chart/mingguan"),
+      $pool->withToken($this->token)->get($this->baseUrl . "/api/transaksi/{$phone}/summary"),
+      $pool->withToken($this->token)->get($this->baseUrl . "/api/transaksi/{$phone}/full"),
     ]);
 
     return [
@@ -202,14 +202,44 @@ class ApiService
   }
 
   /**
+   * Edit transaksi data to API Eksternal
+   */
+  public function editTransaksi(string $phone, string $id)
+  {
+    $response = Http::withToken($this->token)->get("{$this->baseUrl}/api/transaksi/{$phone}/{$id}");
+
+    return $response->json();
+  }
+
+  /**
+   * Update transaksi data to API Eksternal
+   */
+  public function updateTransaksi(string $phone, string $id, array $data)
+  {
+    $response = Http::withToken($this->token)->patch("{$this->baseUrl}/api/transaksi/{$phone}/{$id}", $data);
+
+    return $response->json();
+  }
+
+  /**
+   * Delete transaksi data to API Eksternal
+   */
+  public function deleteTransaksi(string $phone, string $id)
+  {
+    $response = Http::withToken($this->token)->delete("{$this->baseUrl}/api/transaksi/{$phone}/{$id}");
+
+    return $response->json();
+  }
+
+  /**
    * Fetch laporan data from API Eksternal
    */
   public function fetchLaporanData(string $phone, string $month)
   {
     $responses = Http::pool(fn(Pool $pool) => [
-    $pool->withToken($this->token)->get($this->baseUrl . "/api/transaksi/{$phone}/summary"),
-    $pool->withToken($this->token)->get($this->baseUrl . "/api/laporan/{$phone}/chart/bulanan?bulan={$month}"),
-    $pool->withToken($this->token)->get($this->baseUrl . "/api/anomali/{$phone}/insight"),
+      $pool->withToken($this->token)->get($this->baseUrl . "/api/transaksi/{$phone}/summary"),
+      $pool->withToken($this->token)->get($this->baseUrl . "/api/laporan/{$phone}/chart/bulanan?bulan={$month}"),
+      $pool->withToken($this->token)->get($this->baseUrl . "/api/anomali/{$phone}/insight"),
     ]);
 
     return [
