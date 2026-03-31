@@ -53,7 +53,7 @@ class TransaksiController extends Controller
         $apiService
             ->setToken($user->external_api_token)
             ->storeTransaksi($phone, [
-                'nominal' => (int) str_replace('.', '', $request->nominal),
+                'total' => (int) str_replace('.', '', $request->nominal),
                 'tipe' => $request->tipe === 'out' ? 'pengeluaran' : 'pemasukan',
                 'deskripsi' => $request->deskripsi,
                 'transaksi_at' => $request->transaksi_at,
