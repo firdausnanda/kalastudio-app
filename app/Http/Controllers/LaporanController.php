@@ -17,10 +17,34 @@ class LaporanController extends Controller
         $apiService->setToken($user->external_api_token);
 
         $laporanData = $apiService->fetchLaporanData($phone, $month);
-        // dd($laporanData);
+
+        // Filter insights data to show only current week
+        $insightsProp = null;
+        if (isset($laporanData['insights']['minggu']) && is_array($laporanData['insights']['minggu'])) {
+            $today = date('Y-m-d');
+            foreach ($laporanData['insights']['minggu'] as $week) {
+                if ($today >= ($week['periode']['dari'] ?? '') && $today <= ($week['periode']['sampai'] ?? '')) {
+                    $insightsProp = [
+                        'anomali' => $week['anomali'] ?? [],
+                        'insight' => $week['insight'] ?? []
+                    ];
+                    break;
+                }
+            }
+
+            // Fallback: use last week if no match (e.g. viewing past month)
+            if (!$insightsProp && !empty($laporanData['insights']['minggu'])) {
+                $lastWeek = end($laporanData['insights']['minggu']);
+                $insightsProp = [
+                    'anomali' => $lastWeek['anomali'] ?? [],
+                    'insight' => $lastWeek['insight'] ?? []
+                ];
+            }
+        }
+
         return Inertia::render('Laporan/Index', [
             'summaryProp' => $laporanData['summary'] ?? null,
-            'insightsProp' => $laporanData['insights'] ?? null,
+            'insightsProp' => $insightsProp,
             'monthlyReportProp' => $laporanData['monthlyReport']['data'] ?? [],
             'currentMonth' => $month,
         ]);

@@ -341,7 +341,17 @@ export default function ReportPage({ summaryProp, insightsProp, monthlyReportPro
                       <div className="h-10 w-24 bg-slate-100 dark:bg-slate-800 animate-pulse rounded-lg mb-1"></div>
                     ) : (
                       <span className="text-4xl font-black text-slate-900 dark:text-white">
-                        {summaryData?.pertumbuhan ? (summaryData.pertumbuhan.startsWith('+') ? '' : '+') + summaryData.pertumbuhan : '+0%'}
+                        {(() => {
+                          const currentInc = parseFloat(summaryData?.total_pemasukan) || 0;
+                          const prevInc = parseFloat(summaryData?.total_pemasukan_bulan_lalu || summaryData?.pemasukan_bulan_lalu || 0);
+                          let gPct = 0;
+                          if (prevInc > 0) {
+                            gPct = ((currentInc - prevInc) / prevInc) * 100;
+                          } else if (currentInc > 0) {
+                            gPct = 100;
+                          }
+                          return `${gPct > 0 ? '+' : ''}${gPct.toFixed(1)}%`;
+                        })()}
                       </span>
                     )}
                     {isLoading ? (
@@ -350,15 +360,33 @@ export default function ReportPage({ summaryProp, insightsProp, monthlyReportPro
                         Memuat...
                       </span>
                     ) : (
-                      <span className={`font-bold mb-1 flex items-center ${summaryData?.pertumbuhan?.startsWith('+') ? 'text-green-500' :
-                        summaryData?.pertumbuhan?.startsWith('-') ? 'text-red-500' : 'text-slate-500'
+                      <span className={`font-bold mb-1 flex items-center ${
+                          (() => {
+                            const currentInc = parseFloat(summaryData?.total_pemasukan) || 0;
+                            const prevInc = parseFloat(summaryData?.total_pemasukan_bulan_lalu || summaryData?.pemasukan_bulan_lalu || 0);
+                            let gPct = 0;
+                            if (prevInc > 0) {
+                              gPct = ((currentInc - prevInc) / prevInc) * 100;
+                            } else if (currentInc > 0) {
+                              gPct = 100;
+                            }
+                            return gPct >= 0 ? 'text-green-500' : 'text-red-500';
+                          })()
                         }`}>
                         <span className="material-symbols-outlined text-sm mr-1">
-                          {summaryData?.pertumbuhan
-                            ? (summaryData.pertumbuhan.startsWith('+') ? 'trending_up' : 'trending_down')
-                            : 'trending_flat'}
+                          {(() => {
+                            const currentInc = parseFloat(summaryData?.total_pemasukan) || 0;
+                            const prevInc = parseFloat(summaryData?.total_pemasukan_bulan_lalu || summaryData?.pemasukan_bulan_lalu || 0);
+                            let gPct = 0;
+                            if (prevInc > 0) {
+                              gPct = ((currentInc - prevInc) / prevInc) * 100;
+                            } else if (currentInc > 0) {
+                              gPct = 100;
+                            }
+                            return gPct >= 0 ? 'trending_up' : 'trending_down';
+                          })()}
                         </span>
-                        {summaryData?.pertumbuhan || '0%'} Bulan lalu
+                        Dari Pemasukan Bulan Lalu
                       </span>
                     )}
                   </div>
@@ -369,18 +397,22 @@ export default function ReportPage({ summaryProp, insightsProp, monthlyReportPro
                       </span>
                     ) : (
                       (() => {
-                        // Ambil angka dari string pertumbuhan (misal: "+10%" -> 10, "-5%" -> -5)
-                        const nilai = parseFloat(summaryData?.pertumbuhan) || 0;
-
-                        let insight = "";
-                        if (nilai > 0) {
-                          insight = "Performa finansial Anda berada di atas rata-rata industri bulan ini.";
-                        } else if (nilai < 0) {
-                          insight = "Performa finansial Anda berada di bawah rata-rata industri bulan ini.";
-                        } else {
-                          insight = "Performa finansial Anda stabil dan sama seperti bulan sebelumnya.";
+                        const currentInc = parseFloat(summaryData?.total_pemasukan) || 0;
+                        const prevInc = parseFloat(summaryData?.total_pemasukan_bulan_lalu || summaryData?.pemasukan_bulan_lalu || 0);
+                        let nilai = 0;
+                        if (prevInc > 0) {
+                          nilai = ((currentInc - prevInc) / prevInc) * 100;
+                        } else if (currentInc > 0) {
+                          nilai = 100;
                         }
-                        return insight;
+
+                        if (nilai > 0) {
+                          return "Pendapatan Anda meningkat dibandingkan bulan sebelumnya. Terus pertahankan tren positif ini!";
+                        } else if (nilai < 0) {
+                          return "Pendapatan Anda menurun dibandingkan bulan sebelumnya. Evaluasi kembali strategi bisnis Anda.";
+                        } else {
+                          return "Pendapatan Anda stabil dan sama dengan bulan sebelumnya.";
+                        }
                       })()
                     )}
                   </p>
