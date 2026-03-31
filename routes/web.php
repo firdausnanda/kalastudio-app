@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\Career\ApplicationController;
 use App\Http\Controllers\Admin\Career\JobController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\IntegrasiController;
 use App\Http\Controllers\LandingController;
@@ -92,7 +93,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
-    Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
+    Route::get('/payments', [AdminPaymentController::class, 'index'])->name('payments.index');
 
     // Blog
     Route::resource('blog-categories', CategoryController::class)->except(['create', 'show', 'edit']);
