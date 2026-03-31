@@ -18,6 +18,7 @@ class PackageController extends Controller
         try {
             $packages = Packages::with(['prices'])
                 ->where('is_active', true)
+                ->where('type', '!=', 'booster')
                 ->get();
 
             return response()->json([

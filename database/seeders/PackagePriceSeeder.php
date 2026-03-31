@@ -40,5 +40,26 @@ class PackagePriceSeeder extends Seeder
             'price' => 199000,
             'original_price' => 199000,
         ]);
+
+        PackagesPrices::create([
+            'package_id' => 3,
+            'billing_cycle' => 'one_time',
+            'price' => 29000,
+            'original_price' => 29000,
+        ]);
+
+        PackagesPrices::create([
+            'package_id' => 4,
+            'billing_cycle' => 'one_time',
+            'price' => 75000,
+            'original_price' => 75000,
+        ]);
+
+        PackagesPrices::create([
+            'package_id' => 5,
+            'billing_cycle' => 'one_time',
+            'price' => 199000,
+            'original_price' => 199000,
+        ]);
     }
 }
