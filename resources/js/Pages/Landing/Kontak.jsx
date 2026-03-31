@@ -24,7 +24,15 @@ export default function ContactPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Basic phone validation
+    if (data.phone.length < 10) {
+      toast.error('Nomor WhatsApp tidak valid. Pastikan nomor benar dan minimal 10 digit.');
+      return;
+    }
+
     post(route('kontak.store'), {
+      preserveScroll: true,
       onSuccess: () => {
         reset();
       },
@@ -32,7 +40,21 @@ export default function ContactPage() {
   };
 
   const handleChange = (e) => {
-    setData(e.target.name, e.target.value);
+    let { name, value } = e.target;
+    
+    if (name === 'phone') {
+      // Allow only numbers
+      value = value.replace(/\D/g, '');
+      
+      // Auto-format for 08/8 to 628
+      if (value.startsWith('0')) {
+        value = '62' + value.substring(1);
+      } else if (value.startsWith('8')) {
+        value = '62' + value;
+      }
+    }
+    
+    setData(name, value);
   };
 
   const contactInfos = [
@@ -228,7 +250,9 @@ export default function ContactPage() {
                     disabled={processing}
                     className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-5 rounded-[20px] shadow-xl shadow-primary/20 transition-all hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed"
                   >
-                    <span className="material-symbols-outlined">{processing ? 'sync' : 'send'}</span>
+                    <span className={`material-symbols-outlined ${processing ? 'animate-spin' : ''}`}>
+                      {processing ? 'sync' : 'send'}
+                    </span>
                     {processing ? 'Sedang Mengirim...' : 'Kirim Pesan Sekarang'}
                   </button>
                 </form>

@@ -123,7 +123,7 @@ class LandingController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'phone' => 'required|string|max:20',
+            'phone' => 'required|string|min:10|max:20',
             'resume' => 'required|file|mimes:pdf,doc,docx|max:2048',
             'cover_letter' => 'nullable|string',
         ]);
@@ -153,10 +153,13 @@ class LandingController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'phone' => 'required|string|max:20',
+            'phone' => 'required|string|min:10|max:20',
             'subject' => 'required|string|max:255',
-            'message' => 'required|string',
+            'message' => 'required|string|min:10',
+            'type' => 'nullable|string|in:contact,partnership',
         ]);
+
+        $type = $request->input('type', 'contact');
 
         \App\Models\Contact::create([
             'name' => $request->name,
@@ -165,6 +168,7 @@ class LandingController extends Controller
             'subject' => $request->subject,
             'message' => $request->message,
             'status' => 'unread',
+            'type' => $type,
         ]);
 
         return back()->with('success', 'Terima kasih! Pesan Anda telah kami terima dan akan segera kami tindak lanjuti.');

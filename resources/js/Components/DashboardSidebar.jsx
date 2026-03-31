@@ -20,7 +20,7 @@ export default function DashboardSidebar({ isSidebarOpen }) {
             { name: 'Ringkasan', icon: 'grid_view', to: '/dashboard' },
             { name: 'Transaksi', icon: 'receipt_long', to: '/transaksi' },
             { name: 'Laporan AI', icon: 'auto_awesome', to: '/laporan' },
-            { name: 'Integrasi', icon: 'hub', to: '/integrasi' },
+            // { name: 'Integrasi', icon: 'hub', to: '/integrasi' },
           ].map((item, i) => {
             const isActive = pathname === item.to;
             return (

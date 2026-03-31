@@ -1,12 +1,51 @@
 import { useEffect } from 'react';
+import { useForm, Head } from '@inertiajs/react';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import BottomCTA from '@/Components/BottomCTA';
+import Swal from 'sweetalert2';
 
 export default function PartnershipPage() {
+  const { data, setData, post, processing, errors, reset } = useForm({
+    name: '',
+    email: '',
+    phone: '',
+    subject: 'Pengajuan Kemitraan',
+    message: '',
+    type: 'partnership',
+  });
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    if (data.phone.length < 10) {
+      Swal.fire({
+        title: 'Error',
+        text: 'Nomor WhatsApp tidak valid. Minimal 10 digit.',
+        icon: 'error',
+        confirmButtonColor: '#ef4444',
+      });
+      return;
+    }
+
+    post(route('kontak.store'), {
+      preserveScroll: true,
+      onSuccess: () => {
+        Swal.fire({
+          title: 'Berhasil!',
+          text: 'Pengajuan kemitraan Anda telah kami terima. Tim kami akan segera menghubungi Anda.',
+          icon: 'success',
+          confirmButtonColor: '#ef4444',
+          borderRadius: '24px',
+        });
+        reset();
+      },
+    });
+  };
 
   const programs = [
     {
@@ -32,6 +71,7 @@ export default function PartnershipPage() {
   return (
     <div className="bg-white text-slate-900 font-display transition-colors duration-300 dark:bg-slate-900 min-h-screen flex flex-col">
       <Header />
+      <Head title="Partnership" />
 
       <main className="flex-grow">
         {/* Partnership Hero */}
@@ -104,23 +144,74 @@ export default function PartnershipPage() {
                 <h2 className="text-3xl font-black mb-4 dark:text-white">Hubungi Tim Partnership</h2>
                 <p className="text-slate-500">Ajukan pertanyaan atau mulai diskusi kemitraan hari ini.</p>
               </div>
-              <form className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid md:grid-cols-3 gap-6">
                   <div>
                     <label className="block text-sm font-bold mb-2 dark:text-white">Nama Lengkap</label>
-                    <input type="text" className="w-full px-4 py-4 bg-slate-50 dark:bg-slate-800 border-none rounded-xl focus:ring-2 focus:ring-primary/20 outline-none" placeholder="Masukkan nama..." />
+                    <input
+                      type="text"
+                      className={`w-full px-4 py-4 bg-slate-50 dark:bg-slate-800 border-none rounded-xl focus:ring-2 focus:ring-primary/20 outline-none ${errors.name ? 'ring-2 ring-red-500' : ''}`}
+                      placeholder="Masukkan nama..."
+                      value={data.name}
+                      onChange={e => setData('name', e.target.value)}
+                    />
+                    {errors.name && <p className="text-red-500 text-xs mt-1 font-bold">{errors.name}</p>}
                   </div>
                   <div>
                     <label className="block text-sm font-bold mb-2 dark:text-white">Email Bisnis</label>
-                    <input type="email" className="w-full px-4 py-4 bg-slate-50 dark:bg-slate-800 border-none rounded-xl focus:ring-2 focus:ring-primary/20 outline-none" placeholder="email@bisnis.com" />
+                    <input
+                      type="email"
+                      className={`w-full px-4 py-4 bg-slate-50 dark:bg-slate-800 border-none rounded-xl focus:ring-2 focus:ring-primary/20 outline-none ${errors.email ? 'ring-2 ring-red-500' : ''}`}
+                      placeholder="email@bisnis.com"
+                      value={data.email}
+                      onChange={e => setData('email', e.target.value)}
+                    />
+                    {errors.email && <p className="text-red-500 text-xs mt-1 font-bold">{errors.email}</p>}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold mb-2 dark:text-white">Nomor WhatsApp</label>
+                    <input
+                      type="text"
+                      className={`w-full px-4 py-4 bg-slate-50 dark:bg-slate-800 border-none rounded-xl focus:ring-2 focus:ring-primary/20 outline-none ${errors.phone ? 'ring-2 ring-red-500' : ''}`}
+                      placeholder="Contoh: 0812..."
+                      value={data.phone}
+                      onChange={e => {
+                        let val = e.target.value.replace(/\D/g, '');
+                        if (val.startsWith('0')) val = '62' + val.substring(1);
+                        else if (val.startsWith('8')) val = '62' + val;
+                        setData('phone', val);
+                      }}
+                    />
+                    {errors.phone && <p className="text-red-500 text-xs mt-1 font-bold">{errors.phone}</p>}
                   </div>
                 </div>
                 <div>
                   <label className="block text-sm font-bold mb-2 dark:text-white">Pesan / Minat Kemitraan</label>
-                  <textarea rows="4" className="w-full px-4 py-4 bg-slate-50 dark:bg-slate-800 border-none rounded-xl focus:ring-2 focus:ring-primary/20 outline-none" placeholder="Ceritakan sedikit tentang rencana kolaborasi Anda..."></textarea>
+                  <textarea
+                    rows="4"
+                    className={`w-full px-4 py-4 bg-slate-50 dark:bg-slate-800 border-none rounded-xl focus:ring-2 focus:ring-primary/20 outline-none ${errors.message ? 'ring-2 ring-red-500' : ''}`}
+                    placeholder="Ceritakan sedikit tentang rencana kolaborasi Anda..."
+                    value={data.message}
+                    onChange={e => setData('message', e.target.value)}
+                  ></textarea>
+                  {errors.message && <p className="text-red-500 text-xs mt-1 font-bold">{errors.message}</p>}
                 </div>
-                <button className="w-full bg-primary hover:bg-primary/90 text-white py-5 rounded-xl font-bold text-lg shadow-lg shadow-primary/20 transition-all duration-300">
-                  Kirim Pengajuan
+                <button
+                  type="submit"
+                  disabled={processing}
+                  className="w-full bg-primary hover:bg-primary/90 text-white py-5 rounded-xl font-bold text-lg shadow-lg shadow-primary/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 group"
+                >
+                  {processing ? (
+                    <>
+                      <span className="material-symbols-outlined animate-spin">sync</span>
+                      Sedang Mengirim...
+                    </>
+                  ) : (
+                    <>
+                      <span className="material-symbols-outlined transition-transform group-hover:translate-x-1">send</span>
+                      Kirim Pengajuan
+                    </>
+                  )}
                 </button>
               </form>
             </div>

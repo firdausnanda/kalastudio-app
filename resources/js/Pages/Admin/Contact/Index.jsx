@@ -104,6 +104,7 @@ export default function ContactIndex({ auth, contacts }) {
                   <thead>
                     <tr className="bg-slate-50/50 dark:bg-slate-800/20">
                       <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Pengirim</th>
+                      <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Tipe</th>
                       <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Subjek & Pesan</th>
                       <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Status</th>
                       <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Tanggal</th>
@@ -127,6 +128,15 @@ export default function ContactIndex({ auth, contacts }) {
                             <p className="text-sm font-black text-slate-900 dark:text-white">{contact.name}</p>
                             <p className="text-xs text-slate-400 font-medium">{contact.email}</p>
                             <p className="text-xs text-slate-400 font-medium">{contact.phone}</p>
+                          </td>
+                          <td className="px-8 py-6">
+                            <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
+                              contact.type === 'partnership' 
+                                ? 'bg-amber-100 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400' 
+                                : 'bg-blue-100 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400'
+                            }`}>
+                              {contact.type === 'partnership' ? 'Partnership' : 'Contact'}
+                            </span>
                           </td>
                           <td className="px-8 py-6">
                             <p className="text-sm font-black text-slate-700 dark:text-slate-200">{contact.subject}</p>
@@ -218,6 +228,16 @@ export default function ContactIndex({ auth, contacts }) {
                 <div>
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">WhatsApp</p>
                   <p className="text-sm font-black text-slate-900 dark:text-white">{selectedContact.phone}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Tipe Pesan</p>
+                  <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mt-1 ${
+                    selectedContact.type === 'partnership' 
+                      ? 'bg-amber-100 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400' 
+                      : 'bg-blue-100 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400'
+                  }`}>
+                    {selectedContact.type === 'partnership' ? 'Partnership' : 'Contact'}
+                  </span>
                 </div>
                 <div>
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Tanggal Kirim</p>

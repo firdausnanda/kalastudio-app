@@ -13,6 +13,7 @@ class Contact extends Model
         'subject',
         'message',
         'status',
+        'type',
         'read_at',
     ];
 

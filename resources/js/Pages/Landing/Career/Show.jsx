@@ -20,6 +20,17 @@ export default function JobDetail({ job }) {
 
   const submit = (e) => {
     e.preventDefault();
+    
+    if (data.phone.length < 10) {
+      Swal.fire({
+        title: 'Error',
+        text: 'Nomor WhatsApp tidak valid. Minimal 10 digit.',
+        icon: 'error',
+        confirmButtonColor: '#ef4444',
+      });
+      return;
+    }
+
     post(route('karier.apply', job.id), {
       onSuccess: () => {
         reset();
@@ -131,15 +142,20 @@ export default function JobDetail({ job }) {
 
                     <div className="space-y-1">
                       <label htmlFor="phone" className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Nomor WhatsApp</label>
-                      <input
-                        id="phone"
-                        type="text"
-                        value={data.phone}
-                        onChange={(e) => setData('phone', e.target.value)}
-                        className="w-full px-5 py-4 rounded-2xl bg-white dark:bg-slate-800 border-none focus:ring-2 focus:ring-primary/20 text-sm font-bold dark:text-white shadow-sm"
-                        placeholder="0812xxxx"
-                        required
-                      />
+                        <input
+                          id="phone"
+                          type="text"
+                          value={data.phone}
+                          onChange={(e) => {
+                            let val = e.target.value.replace(/\D/g, '');
+                            if (val.startsWith('0')) val = '62' + val.substring(1);
+                            else if (val.startsWith('8')) val = '62' + val;
+                            setData('phone', val);
+                          }}
+                          className={`w-full px-5 py-4 rounded-2xl bg-white dark:bg-slate-800 border-none focus:ring-2 focus:ring-primary/20 text-sm font-bold dark:text-white shadow-sm ${errors.phone ? 'ring-2 ring-red-500' : ''}`}
+                          placeholder="0812xxxx"
+                          required
+                        />
                       {errors.phone && <p className="text-red-500 text-[10px] font-black uppercase tracking-widest mt-1 ml-1">{errors.phone}</p>}
                     </div>
 
@@ -183,8 +199,11 @@ export default function JobDetail({ job }) {
                     <button
                       type="submit"
                       disabled={processing}
-                      className="w-full py-5 bg-primary hover:bg-primary/90 text-white rounded-2xl font-black uppercase tracking-[0.2em] text-xs shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/40 transition-all active:scale-[0.98] disabled:opacity-50"
+                      className="w-full py-5 bg-primary hover:bg-primary/90 text-white rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/40 transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-3"
                     >
+                      <span className={`material-symbols-outlined text-lg ${processing ? 'animate-spin' : ''}`}>
+                        {processing ? 'sync' : 'send'}
+                      </span>
                       {processing ? 'Mengirim Lamaran...' : 'Kirim Lamaran'}
                     </button>
                   </form>
