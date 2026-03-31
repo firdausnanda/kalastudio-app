@@ -19,6 +19,9 @@ export default function SubscriptionPage({ transactions = [], currentPackage = n
 
   const activePlan = plans.find(p => p.isCurrent) || (currentPackage ? {
     ...currentPackage,
+    features: typeof currentPackage.features === 'string'
+      ? JSON.parse(currentPackage.features)
+      : (currentPackage.features || []),
     price: typeof currentPackage.price === 'number'
       ? new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(currentPackage.price)
       : currentPackage.price,

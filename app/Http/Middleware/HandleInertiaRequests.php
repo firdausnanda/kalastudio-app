@@ -37,7 +37,7 @@ class HandleInertiaRequests extends Middleware
         $userDataExternal = null;
 
         if ($user && $phone && $user->external_api_token) {
-            $userDataExternal = Cache::remember("external_user_{$phone}", now()->addMinutes(60), function () use ($phone, $user) {
+            $userDataExternal = Cache::remember("external_user_{$phone}", now()->addMinutes(2), function () use ($phone, $user) {
                 return app(ApiService::class)->setToken($user->external_api_token)->fetchUser($phone);
             });
         }

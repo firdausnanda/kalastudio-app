@@ -11,7 +11,12 @@ class Packages extends Model
         'type',
         'description',
         'token_amount',
+        'features',
         'is_active',
+    ];
+
+    protected $casts = [
+        'features' => 'array',
     ];
 
     protected $table = "packages";
