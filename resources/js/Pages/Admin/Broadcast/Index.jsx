@@ -33,7 +33,6 @@ export default function BroadcastIndex({ auth, broadcasts, roles }) {
     const selectStyles = {
         control: (base, state) => ({
             ...base,
-            backgroundColor: 'transparent',
             border: 'none',
             boxShadow: state.isFocused ? '0 0 0 2px rgba(239, 68, 68, 0.2)' : 'none',
             borderRadius: '1rem',

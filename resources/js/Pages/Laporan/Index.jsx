@@ -8,8 +8,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend,
-  Cell
+  Legend
 } from 'recharts';
 import Select from 'react-select';
 import DashboardHeader from '@/Components/DashboardHeader';
