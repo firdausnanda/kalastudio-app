@@ -1,5 +1,15 @@
 <?php
 
+use App\Http\Controllers\Admin\ActivityLogController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\Blog\CategoryController;
+use App\Http\Controllers\Admin\Blog\PostController;
+use App\Http\Controllers\Admin\Blog\TagController;
+use App\Http\Controllers\Admin\BroadcastController;
+use App\Http\Controllers\Admin\Career\ApplicationController;
+use App\Http\Controllers\Admin\Career\JobController;
+use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\IntegrasiController;
 use App\Http\Controllers\LandingController;
@@ -75,29 +85,40 @@ Route::middleware(['auth', 'EnsureDetailsCompleted', 'CheckExternalApiToken'])->
 
 // Admin
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('dashboard');
-    Route::get('/users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
-    Route::patch('/users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'update'])->name('users.update');
-    Route::patch('/users/{user}/password', [\App\Http\Controllers\Admin\UserController::class, 'updatePassword'])->name('users.password');
-    Route::delete('/users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('users.destroy');
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::patch('/users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::patch('/users/{user}/password', [UserController::class, 'updatePassword'])->name('users.password');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
-    Route::get('/activity-logs', [\App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->name('activity-logs.index');
-    Route::get('/payments', [\App\Http\Controllers\Admin\PaymentController::class, 'index'])->name('payments.index');
+    Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
+    Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
 
     // Blog
-    Route::resource('blog-categories', \App\Http\Controllers\Admin\Blog\CategoryController::class)->except(['create', 'show', 'edit']);
-    Route::resource('blog-tags', \App\Http\Controllers\Admin\Blog\TagController::class)->except(['create', 'show', 'edit']);
-    Route::resource('blog-posts', \App\Http\Controllers\Admin\Blog\PostController::class)->except(['show']);
+    Route::resource('blog-categories', CategoryController::class)->except(['create', 'show', 'edit']);
+    Route::resource('blog-tags', TagController::class)->except(['create', 'show', 'edit']);
+    Route::resource('blog-posts', PostController::class)->except(['show']);
 
     // Broadcast
-    Route::resource('broadcasts', \App\Http\Controllers\Admin\BroadcastController::class)->except(['edit', 'update']);
+    Route::resource('broadcasts', BroadcastController::class)->except(['edit', 'update']);
 
     // Contact
-    Route::resource('contacts', \App\Http\Controllers\Admin\ContactController::class)->only(['index', 'show', 'destroy']);
+    Route::resource('contacts', ContactController::class)->only(['index', 'show', 'destroy']);
 
     // Careers
-    Route::resource('career-jobs', \App\Http\Controllers\Admin\Career\JobController::class)->except(['show']);
-    Route::resource('career-applications', \App\Http\Controllers\Admin\Career\ApplicationController::class)->only(['index', 'show', 'update', 'destroy']);
+    Route::resource('career-jobs', JobController::class)->except(['show']);
+    Route::resource('career-applications', ApplicationController::class)->only(['index', 'show', 'update', 'destroy']);
+
+    // Cache
+    Route::get('cache', function () {
+        Artisan::call('optimize:clear');
+        Artisan::call('optimize');
+        Artisan::call('config:clear');
+        Artisan::call('route:clear');
+        Artisan::call('view:clear');
+        Artisan::call('event:clear');
+        return redirect()->back()->with('success', 'Cache cleared successfully!');
+    })->name('cache');
 });
 
 require __DIR__ . '/auth.php';
