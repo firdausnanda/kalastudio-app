@@ -28,11 +28,13 @@ export default function ContactIndex({ auth, contacts }) {
     setSelectedContact(contact);
     setIsDetailModalOpen(true);
 
-    // If unread, mark as read via router
+    // If unread, mark as read via router using PATCH
     if (contact.status === 'unread') {
-      router.get(route('admin.contacts.show', contact.id), {}, {
+      router.patch(route('admin.contacts.read', contact.id), {}, {
         preserveScroll: true,
-        only: ['contacts'],
+        onSuccess: () => {
+          setSelectedContact(prev => prev ? { ...prev, status: 'read' } : null);
+        }
       });
     }
   };
@@ -237,21 +239,21 @@ export default function ContactIndex({ auth, contacts }) {
                 </div>
               </div>
 
-              <div className="flex gap-4 pt-4">
+              <div className="flex flex-col md:flex-row gap-4 pt-4">
                 <a 
                   href={`mailto:${selectedContact.email}`}
-                  className="flex-1 px-6 py-4 bg-red-500 hover:bg-red-600 text-white rounded-2xl font-black uppercase tracking-widest text-[11px] transition-all shadow-lg shadow-red-500/20 flex items-center justify-center gap-2"
+                  className="flex-1 px-6 py-4 bg-gradient-to-r from-slate-800 to-slate-900 dark:from-slate-700 dark:to-slate-800 hover:from-red-500 hover:to-red-600 text-white rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] transition-all duration-300 shadow-xl shadow-slate-200 dark:shadow-none flex items-center justify-center gap-3 group active:scale-95"
                 >
-                  <span className="material-symbols-outlined text-lg">mail</span>
+                  <span className="material-symbols-outlined text-lg transition-transform group-hover:rotate-12">mail</span>
                   Balas via Email
                 </a>
                 <a 
                   href={`https://wa.me/${selectedContact.phone.replace(/[^0-9]/g, '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 px-6 py-4 bg-green-500 hover:bg-green-600 text-white rounded-2xl font-black uppercase tracking-widest text-[11px] transition-all shadow-lg shadow-green-500/20 flex items-center justify-center gap-2"
+                  className="flex-1 px-6 py-4 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] transition-all duration-300 shadow-xl shadow-emerald-500/30 flex items-center justify-center gap-3 group active:scale-95"
                 >
-                  <span className="material-symbols-outlined text-lg">call</span>
+                  <span className="material-symbols-outlined text-lg transition-transform group-hover:scale-110">call</span>
                   Balas via WhatsApp
                 </a>
               </div>

@@ -22,7 +22,8 @@ class BroadcastController extends Controller
             ->paginate(10);
 
         return Inertia::render('Admin/Broadcast/Index', [
-            'broadcasts' => $broadcasts
+            'broadcasts' => $broadcasts,
+            'roles' => Role::all(['id', 'name'])
         ]);
     }
 

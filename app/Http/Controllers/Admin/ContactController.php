@@ -32,6 +32,18 @@ class ContactController extends Controller
         ]);
     }
 
+    public function markAsRead(Contact $contact)
+    {
+        if ($contact->status === 'unread') {
+            $contact->update([
+                'status' => 'read',
+                'read_at' => Carbon::now(),
+            ]);
+        }
+
+        return back()->with('success', 'Pesan ditandai sebagai dibaca.');
+    }
+
     public function destroy(Contact $contact)
     {
         $contact->delete();

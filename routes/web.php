@@ -104,6 +104,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('broadcasts', BroadcastController::class)->except(['edit', 'update']);
 
     // Contact
+    Route::patch('/contacts/{contact}/read', [ContactController::class, 'markAsRead'])->name('contacts.read');
     Route::resource('contacts', ContactController::class)->only(['index', 'show', 'destroy']);
 
     // Careers
