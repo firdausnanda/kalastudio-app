@@ -108,17 +108,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Careers
     Route::resource('career-jobs', JobController::class)->except(['show']);
     Route::resource('career-applications', ApplicationController::class)->only(['index', 'show', 'update', 'destroy']);
-
-    // Cache
-    Route::get('cache', function () {
-        Artisan::call('optimize:clear');
-        Artisan::call('optimize');
-        Artisan::call('config:clear');
-        Artisan::call('route:clear');
-        Artisan::call('view:clear');
-        Artisan::call('event:clear');
-        return redirect()->back()->with('success', 'Cache cleared successfully!');
-    })->name('cache');
 });
 
 require __DIR__ . '/auth.php';
