@@ -6,6 +6,31 @@ export default function DashboardHeader({ isSidebarOpen, setIsSidebarOpen, userD
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [user, setUser] = useState(auth.user);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('search')) {
+        setSearchQuery(params.get('search'));
+      }
+    }
+  }, []);
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    setIsSearching(true);
+    if (searchQuery.trim()) {
+      router.get(route('transaksi.index'), { search: searchQuery.trim() }, {
+        onFinish: () => setIsSearching(false)
+      });
+    } else {
+      router.get(route('transaksi.index'), {}, {
+        onFinish: () => setIsSearching(false)
+      });
+    }
+  };
 
   // Use prop if passed, otherwise use shared data from HandleInertiaRequests
   const initialUserData = propUserDataExternal || sharedUserDataExternal;
@@ -82,16 +107,28 @@ export default function DashboardHeader({ isSidebarOpen, setIsSidebarOpen, userD
           </div>
 
           {/* Center: Search (Aesthetic) */}
-          <div className="hidden lg:flex flex-grow max-w-md mx-8">
+          <form onSubmit={handleSearchSubmit} className="hidden lg:flex flex-grow max-w-md mx-8">
             <div className="relative w-full group">
-              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">search</span>
+              {isSearching ? (
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center">
+                  <svg className="w-5 h-5 animate-spin text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-20" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3"></circle>
+                    <path className="opacity-80" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                </div>
+              ) : (
+                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">search</span>
+              )}
               <input
                 type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Cari transaksi atau laporan..."
-                className="w-full pl-12 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 transition-all dark:text-white"
+                className="w-full pl-12 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 transition-all dark:text-white disabled:bg-slate-100 dark:disabled:bg-slate-800/80 disabled:text-slate-400 dark:disabled:text-slate-500 disabled:cursor-not-allowed"
+                disabled={isSearching}
               />
             </div>
-          </div>
+          </form>
 
           {/* Right: Tools & Profile */}
           <div className="flex items-center gap-2 sm:gap-4">

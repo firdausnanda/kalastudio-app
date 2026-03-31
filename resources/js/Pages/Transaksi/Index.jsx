@@ -9,7 +9,9 @@ import DashboardFooter from '@/Components/DashboardFooter';
 export default function TransactionPage({ transaksi }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [filterType, setFilterType] = useState({ value: 'all', label: 'Semua Jenis' });
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(
+    typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('search') || '' : ''
+  );
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
