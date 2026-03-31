@@ -109,8 +109,8 @@ class PaymentController extends Controller
                 'amount' => $request->amount,
                 'payer_email' => $request->email,
                 'description' => 'Pembayaran Paket ' . $request->plan_name,
-                'success_redirect_url' => route('langganan'),
-                'failure_redirect_url' => route('langganan'),
+                'success_redirect_url' => route('langganan.index'),
+                'failure_redirect_url' => route('langganan.index'),
             ]);
 
         if ($response->successful()) {
