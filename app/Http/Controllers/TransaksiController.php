@@ -57,6 +57,7 @@ class TransaksiController extends Controller
                 'tipe' => $request->tipe === 'out' ? 'pengeluaran' : 'pemasukan',
                 'deskripsi' => $request->deskripsi,
                 'transaksi_at' => $request->transaksi_at,
+                'sumber_input' => 'manual',
             ]);
 
         return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil disimpan!');
