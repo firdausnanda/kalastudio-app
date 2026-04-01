@@ -22,7 +22,7 @@ export default function DashboardSidebar({ isSidebarOpen }) {
             { name: 'Laporan AI', icon: 'auto_awesome', to: '/laporan' },
             // { name: 'Integrasi', icon: 'hub', to: '/integrasi' },
           ].map((item, i) => {
-            const isActive = pathname === item.to;
+            const isActive = pathname.startsWith(item.to);
             return (
               <Link
                 key={i}

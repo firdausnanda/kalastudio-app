@@ -24,7 +24,9 @@ export default function ReportPage({ summaryProp, insightsProp, monthlyReportPro
     const date = new Date();
     for (let i = 0; i < 4; i++) {
       const d = new Date(date.getFullYear(), date.getMonth() - i, 1);
-      const value = d.toISOString().slice(0, 7); // YYYY-MM
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const value = `${year}-${month}`; // Local YYYY-MM
       const label = d.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
       options.push({ value, label });
     }
@@ -53,15 +55,46 @@ export default function ReportPage({ summaryProp, insightsProp, monthlyReportPro
     ];
   };
 
+  // Aggregate daily data to weekly data
+  const aggregateToWeeks = (data) => {
+    if (!Array.isArray(data) || data.length === 0) return [];
+    
+    const weeks = [
+      { name: 'Minggu 1', masuk: 0, keluar: 0 },
+      { name: 'Minggu 2', masuk: 0, keluar: 0 },
+      { name: 'Minggu 3', masuk: 0, keluar: 0 },
+      { name: 'Minggu 4', masuk: 0, keluar: 0 },
+      { name: 'Minggu 5', masuk: 0, keluar: 0 },
+    ];
+
+    data.forEach(item => {
+      // Ensure we extract the day whether it's '01', '1', or '2026-04-01'
+      const dayStr = String(item.name || '').split('-').pop();
+      const day = parseInt(dayStr, 10);
+      if (isNaN(day)) return;
+
+      let weekIndex = 0;
+      if (day >= 1 && day <= 7) weekIndex = 0;
+      else if (day >= 8 && day <= 14) weekIndex = 1;
+      else if (day >= 15 && day <= 21) weekIndex = 2;
+      else if (day >= 22 && day <= 28) weekIndex = 3;
+      else if (day >= 29) weekIndex = 4;
+      
+      weeks[weekIndex].masuk += (item.pemasukan || 0);
+      weeks[weekIndex].keluar += (item.pengeluaran || 0);
+    });
+
+    // Remove week 5 if it has no data
+    if (weeks[4].masuk === 0 && weeks[4].keluar === 0) {
+      weeks.pop();
+    }
+    
+    return weeks;
+  };
+
   const [summaryData, setSummaryData] = useState(summaryProp);
   const [aiInsights, setAiInsights] = useState(formatInsights(insightsProp));
-  const [reportData, setReportData] = useState(
-    (monthlyReportProp || []).map(item => ({
-      name: `H-${item.name}`,
-      masuk: item.pemasukan || 0,
-      keluar: item.pengeluaran || 0
-    }))
-  );
+  const [reportData, setReportData] = useState(aggregateToWeeks(monthlyReportProp));
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -83,13 +116,8 @@ export default function ReportPage({ summaryProp, insightsProp, monthlyReportPro
   useEffect(() => {
     setSummaryData(summaryProp);
     setAiInsights(formatInsights(insightsProp));
-    setReportData(
-      (monthlyReportProp || []).map(item => ({
-        name: `H-${item.name}`,
-        masuk: item.pemasukan || 0,
-        keluar: item.pengeluaran || 0
-      }))
-    );
+    setReportData(aggregateToWeeks(monthlyReportProp));
+    
     const updatedPeriod = periodOptions.find(opt => opt.value === currentMonth);
     if (updatedPeriod) setReportPeriod(updatedPeriod);
   }, [summaryProp, insightsProp, monthlyReportProp, currentMonth]);
@@ -320,7 +348,7 @@ export default function ReportPage({ summaryProp, insightsProp, monthlyReportPro
                           </div>
                         ))
                       ) : (
-                        <p className="text-sm text-white/40 italic text-center py-4">Belum ada data tersedia minggu ini.</p>
+                        <p className="text-sm text-white/40 italic text-center py-4">Belum ada data tersedia periode ini.</p>
                       )}
                     </div>
 
@@ -355,23 +383,22 @@ export default function ReportPage({ summaryProp, insightsProp, monthlyReportPro
                       </span>
                     )}
                     {isLoading ? (
-                      <span className="text-gray-400 font-bold mb-1 flex items-center animate-pulse">
-                        <span className="material-symbols-outlined text-sm mr-1">sync</span>
-                        Memuat...
+                      <span className="mb-1 flex items-center gap-1.5">
+                        <span className="material-symbols-outlined text-sm animate-spin text-slate-400 dark:text-slate-500">sync</span>
+                        <span className="h-3 w-28 bg-slate-200 dark:bg-slate-800 rounded-full animate-pulse"></span>
                       </span>
                     ) : (
-                      <span className={`font-bold mb-1 flex items-center ${
-                          (() => {
-                            const currentInc = parseFloat(summaryData?.total_pemasukan) || 0;
-                            const prevInc = parseFloat(summaryData?.total_pemasukan_bulan_lalu || summaryData?.pemasukan_bulan_lalu || 0);
-                            let gPct = 0;
-                            if (prevInc > 0) {
-                              gPct = ((currentInc - prevInc) / prevInc) * 100;
-                            } else if (currentInc > 0) {
-                              gPct = 100;
-                            }
-                            return gPct >= 0 ? 'text-green-500' : 'text-red-500';
-                          })()
+                      <span className={`font-bold mb-1 flex items-center ${(() => {
+                        const currentInc = parseFloat(summaryData?.total_pemasukan) || 0;
+                        const prevInc = parseFloat(summaryData?.total_pemasukan_bulan_lalu || summaryData?.pemasukan_bulan_lalu || 0);
+                        let gPct = 0;
+                        if (prevInc > 0) {
+                          gPct = ((currentInc - prevInc) / prevInc) * 100;
+                        } else if (currentInc > 0) {
+                          gPct = 100;
+                        }
+                        return gPct >= 0 ? 'text-green-500' : 'text-red-500';
+                      })()
                         }`}>
                         <span className="material-symbols-outlined text-sm mr-1">
                           {(() => {
@@ -392,8 +419,9 @@ export default function ReportPage({ summaryProp, insightsProp, monthlyReportPro
                   </div>
                   <p className="text-slate-500 leading-relaxed font-bold text-[10px] tracking-wider uppercase">
                     {isLoading ? (
-                      <span className="animate-pulse flex items-center gap-2">
-                        <span className="h-2 w-24 bg-slate-200 rounded"></span>
+                      <span className="animate-pulse flex flex-col gap-1.5 mt-1">
+                        <span className="h-2 w-full bg-slate-200 dark:bg-slate-800 rounded-full"></span>
+                        <span className="h-2 w-2/3 bg-slate-200 dark:bg-slate-800 rounded-full"></span>
                       </span>
                     ) : (
                       (() => {

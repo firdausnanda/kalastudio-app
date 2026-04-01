@@ -236,16 +236,52 @@ class ApiService
    */
   public function fetchLaporanData(string $phone, string $month)
   {
+    // Hitung bulan sebelumnya
+    $previousMonthTimestamp = strtotime($month . '-01 -1 month');
+    $previousMonth = date('Y-m', $previousMonthTimestamp);
+
     $responses = Http::pool(fn(Pool $pool) => [
-      $pool->withToken($this->token)->get($this->baseUrl . "/api/transaksi/{$phone}/summary"),
+      $pool->withToken($this->token)->get($this->baseUrl . "/api/transaksi/{$phone}/summary"), // As fallback
       $pool->withToken($this->token)->get($this->baseUrl . "/api/laporan/{$phone}/chart/bulanan?bulan={$month}"),
-      $pool->withToken($this->token)->get($this->baseUrl . "/api/anomali/{$phone}/insight"),
+      $pool->withToken($this->token)->get($this->baseUrl . "/api/anomali/{$phone}/insight?bulan={$month}"),
+      // Ganti request summary prev month menjadi request chart prev month
+      $pool->withToken($this->token)->get($this->baseUrl . "/api/laporan/{$phone}/chart/bulanan?bulan={$previousMonth}"),
     ]);
 
+    $summary = $responses[0]->successful() ? $responses[0]->json() : [];
+    $monthlyReport = $responses[1]->successful() ? $responses[1]->json() : null;
+    $insights = $responses[2]->successful() ? $responses[2]->json() : null;
+    $prevMonthlyReport = $responses[3]->successful() ? $responses[3]->json() : null;
+
+    // Hitung total manual karena API /summary murni selalu mengembalikan bulan ini secara global
+    $currentPemasukan = 0;
+    $currentPengeluaran = 0;
+    if (isset($monthlyReport['data']) && is_array($monthlyReport['data'])) {
+        foreach ($monthlyReport['data'] as $day) {
+            $currentPemasukan += $day['pemasukan'] ?? 0;
+            $currentPengeluaran += $day['pengeluaran'] ?? 0;
+        }
+        $summary['total_pemasukan'] = $currentPemasukan;
+        $summary['total_pengeluaran'] = $currentPengeluaran;
+        $summary['laba_bersih'] = $currentPemasukan - $currentPengeluaran;
+    }
+
+    $prevPemasukan = 0;
+    $prevPengeluaran = 0;
+    if (isset($prevMonthlyReport['data']) && is_array($prevMonthlyReport['data'])) {
+        foreach ($prevMonthlyReport['data'] as $day) {
+            $prevPemasukan += $day['pemasukan'] ?? 0;
+            $prevPengeluaran += $day['pengeluaran'] ?? 0;
+        }
+    }
+
+    $summary['total_pemasukan_bulan_lalu'] = $prevPemasukan;
+    $summary['total_pengeluaran_bulan_lalu'] = $prevPengeluaran;
+
     return [
-      'summary' => $responses[0]->successful() ? $responses[0]->json() : null,
-      'monthlyReport' => $responses[1]->successful() ? $responses[1]->json() : null,
-      'insights' => $responses[2]->successful() ? $responses[2]->json() : null,
+      'summary' => $summary,
+      'monthlyReport' => $monthlyReport,
+      'insights' => $insights,
     ];
   }
 
