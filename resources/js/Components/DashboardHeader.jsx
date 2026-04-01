@@ -177,7 +177,11 @@ export default function DashboardHeader({ isSidebarOpen, setIsSidebarOpen, userD
                   <p className="text-xs font-black text-slate-900 dark:text-white leading-none text-nowrap mb-1">
                     {user?.name || 'Kala Studio'}
                   </p>
-                  <p className="text-[9px] font-black bg-gradient-to-r from-primary to-amber-500 bg-clip-text text-transparent uppercase leading-none tracking-[0.2em] drop-shadow-sm truncate">
+                  <p className={`text-[9px] font-black uppercase leading-none tracking-[0.2em] drop-shadow-sm truncate ${
+                    userData?.plan?.toLowerCase() === 'trial' 
+                      ? 'text-slate-500 dark:text-slate-400' 
+                      : 'bg-gradient-to-r from-primary to-amber-500 bg-clip-text text-transparent'
+                  }`}>
                     {userData?.plan !== undefined ? userData.plan + ' Plan' : '... Plan'}
                   </p>
                 </div>
@@ -194,7 +198,11 @@ export default function DashboardHeader({ isSidebarOpen, setIsSidebarOpen, userD
                         {user?.name || 'Kala Studio'}
                       </p>
                       <div className="flex items-center">
-                        <p className="text-[9px] font-black bg-gradient-to-r from-primary to-amber-500 bg-clip-text text-transparent uppercase leading-none tracking-[0.2em] drop-shadow-sm">
+                        <p className={`text-[9px] font-black uppercase leading-none tracking-[0.2em] drop-shadow-sm ${
+                          userData?.plan?.toLowerCase() === 'trial'
+                            ? 'text-slate-500 dark:text-slate-400'
+                            : 'bg-gradient-to-r from-primary to-amber-500 bg-clip-text text-transparent'
+                        }`}>
                           {userData?.plan !== undefined ? userData.plan : '...'} Plan
                         </p>
                       </div>
