@@ -12,6 +12,7 @@ export default function AdminSidebar({ isSidebarOpen }) {
   const menuItems = [
     { name: 'Dashboard', icon: 'admin_panel_settings', to: '/admin/dashboard' },
     { name: 'Manajemen User', icon: 'manage_accounts', to: '/admin/users' },
+    { name: 'Package', icon: 'inventory_2', to: '/admin/packages' },
     { name: 'Broadcast', icon: 'campaign', to: '/admin/broadcasts' },
     { name: 'Pembayaran', icon: 'payments', to: '/admin/payments' },
     { name: 'Pesan Masuk', icon: 'mail', to: '/admin/contacts' },
@@ -66,8 +67,8 @@ export default function AdminSidebar({ isSidebarOpen }) {
                   <button
                     onClick={item.toggle}
                     className={`w-full flex items-center justify-between px-4 py-3 rounded-xl font-bold transition-all ${isChildActive && !item.isOpen
-                        ? 'bg-red-50 text-red-500 dark:bg-red-500/10'
-                        : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-red-500'
+                      ? 'bg-red-50 text-red-500 dark:bg-red-500/10'
+                      : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-red-500'
                       }`}
                   >
                     <div className="flex items-center gap-4">
@@ -94,8 +95,8 @@ export default function AdminSidebar({ isSidebarOpen }) {
                             <Link
                               href={sub.to}
                               className={`block w-full px-4 py-2.5 rounded-xl font-bold text-sm transition-all ${isSubActive
-                                  ? 'bg-red-500 text-white shadow-md shadow-red-500/20'
-                                  : 'text-slate-500 dark:text-slate-400 hover:text-red-500 hover:bg-slate-50 dark:hover:bg-slate-800'
+                                ? 'bg-red-500 text-white shadow-md shadow-red-500/20'
+                                : 'text-slate-500 dark:text-slate-400 hover:text-red-500 hover:bg-slate-50 dark:hover:bg-slate-800'
                                 }`}
                             >
                               {sub.name}
@@ -117,8 +118,8 @@ export default function AdminSidebar({ isSidebarOpen }) {
                 key={i}
                 href={item.to}
                 className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl font-bold transition-all mb-2 ${isActive
-                    ? 'bg-red-500 text-white shadow-lg shadow-red-500/20'
-                    : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-red-500'
+                  ? 'bg-red-500 text-white shadow-lg shadow-red-500/20'
+                  : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-red-500'
                   }`}
               >
                 <span className="material-symbols-outlined">{item.icon}</span>

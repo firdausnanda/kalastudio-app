@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\BroadcastController;
 use App\Http\Controllers\Admin\Career\ApplicationController;
 use App\Http\Controllers\Admin\Career\JobController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\DashboardController;
@@ -113,6 +114,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Careers
     Route::resource('career-jobs', JobController::class)->except(['show']);
     Route::resource('career-applications', ApplicationController::class)->only(['index', 'show', 'update', 'destroy']);
+
+    // Packages
+    Route::resource('packages', PackageController::class)->except(['create', 'show', 'edit']);
 });
 
 require __DIR__ . '/auth.php';

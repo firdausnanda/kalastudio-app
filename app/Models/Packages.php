@@ -15,9 +15,12 @@ class Packages extends Model
         'is_active',
     ];
 
-    protected $casts = [
-        'features' => 'array',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'features' => 'array',
+        ];
+    }
 
     protected $table = "packages";
 
