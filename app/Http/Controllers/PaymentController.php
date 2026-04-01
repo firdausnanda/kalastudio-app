@@ -163,7 +163,7 @@ class PaymentController extends Controller
                         $apiService->setToken($user->external_api_token);
 
                         if ($package->type === 'booster') {
-                            $apiService->addBoosterTokens($phone, $package->token_amount);
+                            $apiService->addBoosterTokens($phone, (int) $package->token_amount);
                         } else {
                             $apiService->updateUserPackage($phone, strtolower($package->name));
                         }

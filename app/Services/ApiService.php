@@ -257,22 +257,22 @@ class ApiService
     $currentPemasukan = 0;
     $currentPengeluaran = 0;
     if (isset($monthlyReport['data']) && is_array($monthlyReport['data'])) {
-        foreach ($monthlyReport['data'] as $day) {
-            $currentPemasukan += $day['pemasukan'] ?? 0;
-            $currentPengeluaran += $day['pengeluaran'] ?? 0;
-        }
-        $summary['total_pemasukan'] = $currentPemasukan;
-        $summary['total_pengeluaran'] = $currentPengeluaran;
-        $summary['laba_bersih'] = $currentPemasukan - $currentPengeluaran;
+      foreach ($monthlyReport['data'] as $day) {
+        $currentPemasukan += $day['pemasukan'] ?? 0;
+        $currentPengeluaran += $day['pengeluaran'] ?? 0;
+      }
+      $summary['total_pemasukan'] = $currentPemasukan;
+      $summary['total_pengeluaran'] = $currentPengeluaran;
+      $summary['laba_bersih'] = $currentPemasukan - $currentPengeluaran;
     }
 
     $prevPemasukan = 0;
     $prevPengeluaran = 0;
     if (isset($prevMonthlyReport['data']) && is_array($prevMonthlyReport['data'])) {
-        foreach ($prevMonthlyReport['data'] as $day) {
-            $prevPemasukan += $day['pemasukan'] ?? 0;
-            $prevPengeluaran += $day['pengeluaran'] ?? 0;
-        }
+      foreach ($prevMonthlyReport['data'] as $day) {
+        $prevPemasukan += $day['pemasukan'] ?? 0;
+        $prevPengeluaran += $day['pengeluaran'] ?? 0;
+      }
     }
 
     $summary['total_pemasukan_bulan_lalu'] = $prevPemasukan;
@@ -300,10 +300,11 @@ class ApiService
   /**
    * Add Booster Tokens in API Eksternal
    */
-  public function addBoosterTokens(string $phone, int $tokens)
+  public function addBoosterTokens(string $phone, int $jumlah)
   {
-    $response = Http::withToken($this->token)->post("{$this->baseUrl}/api/users/{$phone}/add-tokens", [
-      'tokens' => $tokens,
+    $response = Http::withToken($this->token)->post("{$this->baseUrl}/api/admin/token/topup", [
+      'nomor_wa' => $phone,
+      'jumlah' => $jumlah,
     ]);
 
     return $response->json();
