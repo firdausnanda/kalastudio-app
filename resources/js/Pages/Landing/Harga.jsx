@@ -1,17 +1,54 @@
-'use client';
-import { useEffect, useState } from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import BottomCTA from '@/components/BottomCTA';
+import { Head, usePage } from '@inertiajs/react';
+import Header from '@/Components/Header';
+import Footer from '@/Components/Footer';
+import BottomCTA from '@/Components/BottomCTA';
 import { Link } from '@inertiajs/react';
 
 
 export default function PricingPage() {
+  const { url } = usePage();
   const [isAnnual, setIsAnnual] = useState(true);
 
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const siteTitle = "Paket Harga KalaStudio - Solusi Pembukuan UMKM Terjangkau";
+  const siteDescription = "Pilih paket langganan KalaStudio yang sesuai dengan skala bisnis Anda. Mulai dari paket gratis hingga solusi kustom untuk korporasi. Transparansi harga, tanpa biaya tersembunyi.";
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://kalastudio.ai';
+  const canonicalUrl = `${baseUrl}${url}`;
+
+  const faqs = [
+    {
+      q: "Apakah saya bisa membatalkan langganan kapan saja?",
+      a: "Ya, Anda dapat membatalkan langganan Anda kapan saja tanpa biaya tambahan. Akses Anda akan tetap aktif hingga masa langganan berakhir."
+    },
+    {
+      q: "Apakah data saya aman di KalaStudio?",
+      a: "Keamanan adalah prioritas kami. Seluruh data dienkripsi dengan standar bank dan disimpan di server dengan keamanan tinggi."
+    },
+    {
+      q: "Apakah ada biaya tersembunyi?",
+      a: "Tidak ada. Harga yang Anda lihat adalah harga yang Anda bayar. Tidak ada biaya aktivasi atau biaya pemeliharaan tambahan."
+    },
+    {
+      q: "Dapatkah saya upgrade atau downgrade paket?",
+      a: "Tentu! Anda bisa mengubah paket langganan Anda kapan saja melalui dashboard akun Anda."
+    }
+  ];
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.q,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.a
+      }
+    }))
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -78,31 +115,24 @@ export default function PricingPage() {
     }
   };
 
-  const faqs = [
-    {
-      q: "Apakah saya bisa membatalkan langganan kapan saja?",
-      a: "Ya, Anda dapat membatalkan langganan Anda kapan saja tanpa biaya tambahan. Akses Anda akan tetap aktif hingga masa langganan berakhir."
-    },
-    {
-      q: "Apakah data saya aman di KalaStudio?",
-      a: "Keamanan adalah prioritas kami. Seluruh data dienkripsi dengan standar bank dan disimpan di server dengan keamanan tinggi."
-    },
-    {
-      q: "Apakah ada biaya tersembunyi?",
-      a: "Tidak ada. Harga yang Anda lihat adalah harga yang Anda bayar. Tidak ada biaya aktivasi atau biaya pemeliharaan tambahan."
-    },
-    {
-      q: "Dapatkah saya upgrade atau downgrade paket?",
-      a: "Tentu! Anda bisa mengubah paket langganan Anda kapan saja melalui dashboard akun Anda."
-    }
-  ];
-
   const formatPrice = (price) => {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(price);
   };
 
   return (
     <div className="bg-white text-slate-900 font-display transition-colors duration-300 dark:bg-slate-900 min-h-screen flex flex-col">
+      <Head>
+        <title>{siteTitle}</title>
+        <meta name="description" content={siteDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:title" content={siteTitle} />
+        <meta property="og:description" content={siteDescription} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      </Head>
       <Header />
 
       <main className="flex-grow">

@@ -1,9 +1,16 @@
 import { useEffect } from 'react';
+import { Head, usePage } from '@inertiajs/react';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import BottomCTA from '@/Components/BottomCTA';
 
 export default function IntegrasiWAPage() {
+  const { url } = usePage();
+  const siteTitle = "Integrasi WhatsApp KalaStudio - Catat Keuangan Semudah Chatting";
+  const siteDescription = "Hubungkan bisnis Anda dengan AI KalaStudio melalui WhatsApp. Catat transaksi, kirim voice note, dan pantau laporan keuangan tanpa harus login ke dashboard. Mudah, aman, dan instan.";
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://kalastudio.ai';
+  const canonicalUrl = `${baseUrl}${url}`;
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -55,6 +62,15 @@ export default function IntegrasiWAPage() {
 
   return (
     <div className="bg-white text-slate-900 font-display transition-colors duration-300 dark:bg-slate-900 min-h-screen flex flex-col">
+      <Head>
+        <title>{siteTitle}</title>
+        <meta name="description" content={siteDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:title" content={siteTitle} />
+        <meta property="og:description" content={siteDescription} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+      </Head>
       <Header />
 
       <main className="flex-grow">

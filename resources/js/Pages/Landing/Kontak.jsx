@@ -1,11 +1,37 @@
 import { useEffect } from 'react';
-import { useForm, usePage } from '@inertiajs/react';
+import { useForm, usePage, Head } from '@inertiajs/react';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import { toast, Toaster } from 'sonner';
 
 export default function ContactPage() {
+  const { url } = usePage();
   const { flash } = usePage().props;
+
+  const siteTitle = "Hubungi Kami - Konsultasi Pembukuan UMKM Gratis | KalaStudio";
+  const siteDescription = "Punya pertanyaan atau butuh bantuan tentang pembukuan digital? Hubungi tim KalaStudio melalui WhatsApp, Email, atau kunjungi kantor kami. Kami siap membantu kesuksesan bisnis Anda.";
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://kalastudio.ai';
+  const canonicalUrl = `${baseUrl}${url}`;
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Hubungi KalaStudio",
+    "description": "Halaman kontak untuk layanan pembukuan UMKM KalaStudio",
+    "mainEntity": {
+      "@type": "Organization",
+      "name": "KalaStudio",
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "telephone": "+62-812-1712-2497",
+          "contactType": "customer service",
+          "email": "team@kalastudioai.com",
+          "availableLanguage": ["Indonesian"]
+        }
+      ]
+    }
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -101,6 +127,18 @@ export default function ContactPage() {
 
   return (
     <div className="bg-white text-slate-900 font-display transition-colors duration-300 dark:bg-slate-900 min-h-screen flex flex-col">
+      <Head>
+        <title>{siteTitle}</title>
+        <meta name="description" content={siteDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:title" content={siteTitle} />
+        <meta property="og:description" content={siteDescription} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      </Head>
       <Toaster position="top-center" richColors />
       <Header />
 

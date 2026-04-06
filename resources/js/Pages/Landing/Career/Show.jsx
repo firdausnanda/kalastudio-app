@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
-import { Head, useForm, Link } from '@inertiajs/react';
+import { Head, useForm, Link, usePage } from '@inertiajs/react';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import BottomCTA from '@/Components/BottomCTA';
 import Swal from 'sweetalert2';
 
 export default function JobDetail({ job }) {
+  const { url } = usePage();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -17,6 +18,33 @@ export default function JobDetail({ job }) {
     resume: null,
     cover_letter: '',
   });
+
+  const siteTitle = `${job.title} - Karier di KalaStudio`;
+  const siteDescription = `Lamar posisi ${job.title} di KalaStudio. ${job.description.substring(0, 150)}...`;
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://kalastudio.ai';
+  const canonicalUrl = `${baseUrl}${url}`;
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "JobPosting",
+    "title": job.title,
+    "description": job.description,
+    "datePosted": job.created_at,
+    "employmentType": job.type,
+    "hiringOrganization": {
+      "@type": "Organization",
+      "name": "KalaStudio",
+      "sameAs": "https://kalastudio.ai"
+    },
+    "jobLocation": {
+      "@type": "Place",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": job.location,
+        "addressCountry": "ID"
+      }
+    }
+  };
 
   const submit = (e) => {
     e.preventDefault();
@@ -48,7 +76,18 @@ export default function JobDetail({ job }) {
 
   return (
     <div className="bg-white text-slate-900 font-display transition-colors duration-300 dark:bg-slate-900 min-h-screen flex flex-col">
-      <Head title={`${job.title} - Karier Kalastudio`} />
+      <Head>
+        <title>{siteTitle}</title>
+        <meta name="description" content={siteDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:title" content={siteTitle} />
+        <meta property="og:description" content={siteDescription} />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={canonicalUrl} />
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      </Head>
       <Header />
 
       <main className="flex-grow pt-32 pb-24 px-4">

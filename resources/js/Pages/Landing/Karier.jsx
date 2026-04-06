@@ -3,9 +3,15 @@ import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import BottomCTA from '@/Components/BottomCTA';
 
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 
 export default function CareerPage({ jobs }) {
+  const { url } = usePage();
+  const siteTitle = "Karier di KalaStudio - Mari Berkontribusi untuk Digitalisasi UMKM";
+  const siteDescription = "Bergabunglah dengan tim KalaStudio dalam misi mendigitalisasi jutaan UMKM Indonesia melalui teknologi AI dan WhatsApp. Temukan lowongan kerja yang sesuai dengan passion Anda.";
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://kalastudio.ai';
+  const canonicalUrl = `${baseUrl}${url}`;
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -45,6 +51,15 @@ export default function CareerPage({ jobs }) {
 
   return (
     <div className="bg-white text-slate-900 font-display transition-colors duration-300 dark:bg-slate-900 min-h-screen flex flex-col">
+      <Head>
+        <title>{siteTitle}</title>
+        <meta name="description" content={siteDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:title" content={siteTitle} />
+        <meta property="og:description" content={siteDescription} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+      </Head>
       <Header />
 
       <main className="flex-grow">

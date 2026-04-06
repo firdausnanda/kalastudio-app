@@ -2,8 +2,29 @@ import { useEffect } from 'react';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import BottomCTA from '@/Components/BottomCTA';
+import { Head, usePage } from '@inertiajs/react';
 
 export default function AboutPage() {
+  const { url } = usePage();
+  const siteTitle = "Tentang KalaStudio - Misi Kami Memberdayakan UMKM Indonesia";
+  const siteDescription = "KalaStudio adalah platform manajemen keuangan berbasis WhatsApp AI yang dirancang khusus untuk mempermudah operasional bisnis di Indonesia. Kenali visi, misi, dan perjalanan kami.";
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://kalastudio.ai';
+  const canonicalUrl = `${baseUrl}${url}`;
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "KalaStudio",
+    "url": "https://kalastudio.ai",
+    "logo": "https://kalastudio.ai/img/logo.png",
+    "description": "Platform manajemen keuangan berbasis WhatsApp AI untuk UMKM Indonesia.",
+    "foundingDate": "2025",
+    "sameAs": [
+      "https://www.instagram.com/kalastudio.ai",
+      "https://www.tiktok.com/@kalastudio.ai"
+    ]
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -28,6 +49,18 @@ export default function AboutPage() {
 
   return (
     <div className="bg-white text-slate-900 font-display transition-colors duration-300 dark:bg-slate-900 min-h-screen flex flex-col">
+      <Head>
+        <title>{siteTitle}</title>
+        <meta name="description" content={siteDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:title" content={siteTitle} />
+        <meta property="og:description" content={siteDescription} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      </Head>
       <Header />
 
       <main className="flex-grow">

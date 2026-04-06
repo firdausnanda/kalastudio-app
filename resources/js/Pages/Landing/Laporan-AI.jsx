@@ -2,10 +2,16 @@ import { useEffect } from 'react';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import BottomCTA from '@/Components/BottomCTA';
-import { Link } from '@inertiajs/react';
+import { Link, Head, usePage } from '@inertiajs/react';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 
 export default function LaporanAIPage() {
+  const { url } = usePage();
+  const siteTitle = "Laporan Keuangan AI - Wawasan Bisnis Real-time | KalaStudio";
+  const siteDescription = "Dapatkan laporan laba rugi instan, analisis tren penjualan, dan ringkasan finansial otomatis di WhatsApp. Pantau kesehatan bisnis Anda kapan saja dengan bantuan AI cerdas.";
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://kalastudio.ai';
+  const canonicalUrl = `${baseUrl}${url}`;
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -67,6 +73,15 @@ export default function LaporanAIPage() {
 
   return (
     <div className="bg-white text-slate-900 font-display transition-colors duration-300 dark:bg-slate-900 min-h-screen flex flex-col">
+      <Head>
+        <title>{siteTitle}</title>
+        <meta name="description" content={siteDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:title" content={siteTitle} />
+        <meta property="og:description" content={siteDescription} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+      </Head>
       <Header />
 
       <main className="flex-grow">

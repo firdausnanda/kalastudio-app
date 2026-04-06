@@ -6,15 +6,53 @@ import BottomCTA from '@/Components/BottomCTA';
 import 'quill/dist/quill.snow.css'; // For basic Quill formatting (ql-editor styling)
 
 export default function BlogPost({ post }) {
+  const { url } = usePage();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+  const siteTitle = post.seo_title || post.title;
+  const siteDescription = post.seo_description || post.excerpt;
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://kalastudio.ai';
+  const canonicalUrl = `${baseUrl}${url}`;
+  const ogImage = post.featured_image ? `/storage/${post.featured_image}` : `${baseUrl}/img/og-image.png`;
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": post.title,
+    "image": ogImage,
+    "author": {
+      "@type": "Person",
+      "name": post.author.name
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "KalaStudio",
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${baseUrl}/img/logo.png`
+      }
+    },
+    "datePublished": post.published_at || post.created_at,
+    "description": post.excerpt
+  };
+
   return (
     <div className="bg-white text-slate-900 font-display transition-colors duration-300 dark:bg-slate-900 min-h-screen flex flex-col">
       <Head>
-        <title>{post.seo_title || post.title}</title>
-        <meta head-key="description" name="description" content={post.seo_description || post.excerpt} />
+        <title>{siteTitle}</title>
+        <meta name="description" content={siteDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:title" content={siteTitle} />
+        <meta property="og:description" content={siteDescription} />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:image" content={ogImage} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
       </Head>
       <Header />
 

@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
-import { useForm, Head } from '@inertiajs/react';
+import { useForm, Head, usePage } from '@inertiajs/react';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import BottomCTA from '@/Components/BottomCTA';
 import Swal from 'sweetalert2';
 
 export default function PartnershipPage() {
+  const { url } = usePage();
   const { data, setData, post, processing, errors, reset } = useForm({
     name: '',
     email: '',
@@ -14,6 +15,11 @@ export default function PartnershipPage() {
     message: '',
     type: 'partnership',
   });
+
+  const siteTitle = "Program Partnership KalaStudio - Tumbuh Bersama Digitalisasi UMKM";
+  const siteDescription = "Bergabunglah sebagai mitra strategis KalaStudio. Kami membuka peluang Reseller, Affiliate, dan Integrasi Teknologi untuk bersama-sama mendigitalisasi jutaan UMKM di Indonesia.";
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://kalastudio.ai';
+  const canonicalUrl = `${baseUrl}${url}`;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -70,8 +76,16 @@ export default function PartnershipPage() {
 
   return (
     <div className="bg-white text-slate-900 font-display transition-colors duration-300 dark:bg-slate-900 min-h-screen flex flex-col">
+      <Head>
+        <title>{siteTitle}</title>
+        <meta name="description" content={siteDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:title" content={siteTitle} />
+        <meta property="og:description" content={siteDescription} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+      </Head>
       <Header />
-      <Head title="Partnership" />
 
       <main className="flex-grow">
         {/* Partnership Hero */}

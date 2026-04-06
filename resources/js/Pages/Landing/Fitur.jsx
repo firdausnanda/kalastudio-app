@@ -1,3 +1,4 @@
+import { Head, usePage } from '@inertiajs/react';
 import Header from '@/Components/Header';
 import Features from '@/Components/Features';
 import DetailedFeatures from '@/Components/DetailedFeatures';
@@ -6,6 +7,12 @@ import BottomCTA from '@/Components/BottomCTA';
 import { useEffect } from 'react';
 
 export default function FeaturesPage() {
+  const { url } = usePage();
+  const siteTitle = "Fitur KalaStudio - Otomatisasi Keuangan via WhatsApp & AI";
+  const siteDescription = "Kelola seluruh siklus keuangan bisnis Anda hanya melalui WhatsApp. Cepat, akurat, dan didukung teknologi AI mutakhir. Laporan harian, mingguan, dan analisis tren dalam satu chat.";
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://kalastudio.ai';
+  const canonicalUrl = `${baseUrl}${url}`;
+
   // Ensure we start at the top of the page when navigating here
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -13,6 +20,15 @@ export default function FeaturesPage() {
 
   return (
     <div className="bg-white text-slate-900 font-display transition-colors duration-300 dark:bg-slate-900 min-h-screen flex flex-col">
+      <Head>
+        <title>{siteTitle}</title>
+        <meta name="description" content={siteDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:title" content={siteTitle} />
+        <meta property="og:description" content={siteDescription} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+      </Head>
       <Header />
 
       <main className="flex-grow">

@@ -2,10 +2,16 @@ import { useEffect, useState } from 'react';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import BottomCTA from '@/Components/BottomCTA';
-import { Link } from '@inertiajs/react';
+import { Link, Head, usePage } from '@inertiajs/react';
 
 export default function PanduanPage() {
   const [openFaq, setOpenFaq] = useState(null);
+  const { url } = usePage();
+
+  const siteTitle = "Panduan Penggunaan KalaStudio - Tutorial Lengkap WhatsApp AI";
+  const siteDescription = "Cari jawaban atau pelajari cara memaksimalkan KalaStudio untuk pertumbuhan bisnis Anda. Panduan lengkap mulai dari pendaftaran hingga integrasi AI WhatsApp.";
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://kalastudio.ai';
+  const canonicalUrl = `${baseUrl}${url}`;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -63,6 +69,15 @@ export default function PanduanPage() {
 
   return (
     <div className="bg-white text-slate-900 font-display transition-colors duration-300 dark:bg-slate-900 min-h-screen flex flex-col">
+      <Head>
+        <title>{siteTitle}</title>
+        <meta name="description" content={siteDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:title" content={siteTitle} />
+        <meta property="og:description" content={siteDescription} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+      </Head>
       <Header />
 
       <main className="flex-grow">

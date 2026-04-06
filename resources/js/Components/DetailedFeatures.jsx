@@ -67,7 +67,7 @@ export default function DetailedFeatures() {
                 <span className="material-symbols-outlined text-3xl">notifications_active</span>
               </div>
               <h3 className="text-2xl font-black text-secondary dark:text-white mb-4 transition-colors">Pengingat Otomatis</h3>
-              <p className="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed transition-colors">Jangan biarkan piutang macet. ChatKas akan mengirimkan notifikasi pengingat tepat waktu ke Anda atau pelanggan.</p>
+              <p className="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed transition-colors">Jangan biarkan piutang macet. KalaStudio akan mengirimkan notifikasi pengingat tepat waktu ke Anda atau pelanggan.</p>
               <div className="bg-amber-50 dark:bg-amber-900/20 rounded-2xl p-4 border border-amber-100 dark:border-amber-900/50 flex items-start gap-3 transition-colors">
                 <span className="material-symbols-outlined text-amber-500 text-xl">priority_high</span>
                 <div className="flex-1">

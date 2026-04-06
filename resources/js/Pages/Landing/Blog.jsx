@@ -3,15 +3,30 @@ import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import BottomCTA from '@/Components/BottomCTA';
 
-import { Link } from '@inertiajs/react';
+import { Link, Head, usePage } from '@inertiajs/react';
 
 export default function BlogPage({ featuredPost, posts }) {
+  const { url } = usePage();
+  const siteTitle = "Blog KalaStudio - Edukasi Finansial & Tips Bisnis UMKM";
+  const siteDescription = "Temukan tips praktis, panduan teknologi, dan kabar terbaru dari industri UMKM untuk membantu bisnis Anda melaju lebih kencang bersama KalaStudio.";
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://kalastudio.ai';
+  const canonicalUrl = `${baseUrl}${url}`;
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   return (
     <div className="bg-white text-slate-900 font-display transition-colors duration-300 dark:bg-slate-900 min-h-screen flex flex-col">
+      <Head>
+        <title>{siteTitle}</title>
+        <meta name="description" content={siteDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:title" content={siteTitle} />
+        <meta property="og:description" content={siteDescription} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+      </Head>
       <Header />
 
       <main className="flex-grow">

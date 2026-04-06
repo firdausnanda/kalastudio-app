@@ -1,14 +1,31 @@
 import { useEffect } from 'react';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
+import { Head, usePage } from '@inertiajs/react';
 
 export default function PrivacyPage() {
+  const { url } = usePage();
+  const siteTitle = "Kebijakan Privasi - KalaStudio";
+  const siteDescription = "Pelajari bagaimana KalaStudio mengumpulkan, menggunakan, dan melindungi data pribadi serta catatan keuangan Anda saat menggunakan platform kami.";
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://kalastudio.ai';
+  const canonicalUrl = `${baseUrl}${url}`;
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   return (
     <div className="bg-white text-slate-900 font-display transition-colors duration-300 dark:bg-slate-900 min-h-screen flex flex-col">
+      <Head>
+        <title>{siteTitle}</title>
+        <meta name="description" content={siteDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:title" content={siteTitle} />
+        <meta property="og:description" content={siteDescription} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta name="robots" content="noindex, follow" />
+      </Head>
       <Header />
 
       <main className="flex-grow">
