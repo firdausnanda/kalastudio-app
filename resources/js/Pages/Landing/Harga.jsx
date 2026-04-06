@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Head, usePage } from '@inertiajs/react';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';

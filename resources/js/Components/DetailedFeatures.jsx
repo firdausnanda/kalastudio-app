@@ -1,6 +1,48 @@
+import { useEffect, useRef } from 'react';
+import { animate, stagger } from 'animejs';
+
 export default function DetailedFeatures() {
+  const sectionRef = useRef(null);
+  const itemsRef = useRef(null);
+  const ctaCardRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            if (entry.target === sectionRef.current) {
+              animate(itemsRef.current?.children, {
+                translateY: [50, 0],
+                opacity: [0, 1],
+                scale: [0.95, 1],
+                delay: stagger(150),
+                duration: 1000,
+                easing: 'easeOutQuart',
+              });
+            } else if (entry.target === ctaCardRef.current) {
+              animate(ctaCardRef.current, {
+                translateY: [40, 0],
+                opacity: [0, 1],
+                duration: 1200,
+                easing: 'easeOutExpo',
+              });
+            }
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    if (ctaCardRef.current) observer.observe(ctaCardRef.current);
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="py-32 bg-white dark:bg-slate-900 relative overflow-hidden transition-colors duration-300">
+    <section ref={sectionRef} className="py-32 bg-white dark:bg-slate-900 relative overflow-hidden transition-colors duration-300">
       {/* Subtle Background Accents */}
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-96 h-96 bg-primary/5 dark:bg-primary/10 rounded-full blur-[100px] -z-10 transition-colors"></div>
       <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-96 h-96 bg-primary/5 dark:bg-primary/10 rounded-full blur-[100px] -z-10 transition-colors"></div>
@@ -14,9 +56,9 @@ export default function DetailedFeatures() {
           <p className="text-lg text-slate-500 dark:text-slate-400 transition-colors">Kami menggabungkan kemudahan WhatsApp dengan kecanggihan AI untuk memberikan kontrol finansial penuh pada bisnis Anda.</p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div ref={itemsRef} className="grid md:grid-cols-3 gap-8">
           {/* Card 1: WhatsApp Integration */}
-          <div className="group relative p-8 rounded-[2.5rem] bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-2xl shadow-slate-200/40 dark:shadow-none hover:-translate-y-2 transition-all duration-500 overflow-hidden">
+          <div className="group relative p-8 rounded-[2.5rem] bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-2xl shadow-slate-200/40 dark:shadow-none hover:-translate-y-2 transition-all duration-500 overflow-hidden opacity-0">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 dark:from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
             <div className="relative z-10">
               <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center text-white mb-8 shadow-lg shadow-primary/30 group-hover:rotate-6 transition-transform">
@@ -37,7 +79,7 @@ export default function DetailedFeatures() {
           </div>
 
           {/* Card 2: Instant Reports */}
-          <div className="group relative p-8 rounded-[2.5rem] bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-2xl shadow-slate-200/40 dark:shadow-none hover:-translate-y-2 transition-all duration-500 overflow-hidden">
+          <div className="group relative p-8 rounded-[2.5rem] bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-2xl shadow-slate-200/40 dark:shadow-none hover:-translate-y-2 transition-all duration-500 overflow-hidden opacity-0">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 dark:from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
             <div className="relative z-10">
               <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center text-white mb-8 shadow-lg shadow-primary/30 group-hover:rotate-6 transition-transform">
@@ -60,7 +102,7 @@ export default function DetailedFeatures() {
           </div>
 
           {/* Card 3: Debt Management */}
-          <div className="group relative p-8 rounded-[2.5rem] bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-2xl shadow-slate-200/40 dark:shadow-none hover:-translate-y-2 transition-all duration-500 overflow-hidden">
+          <div className="group relative p-8 rounded-[2.5rem] bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-2xl shadow-slate-200/40 dark:shadow-none hover:-translate-y-2 transition-all duration-500 overflow-hidden opacity-0">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 dark:from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
             <div className="relative z-10">
               <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center text-white mb-8 shadow-lg shadow-primary/30 group-hover:rotate-6 transition-transform">
@@ -79,7 +121,7 @@ export default function DetailedFeatures() {
           </div>
         </div>
 
-        <div className="mt-20 p-8 rounded-[3rem] bg-secondary dark:bg-slate-800 border dark:border-slate-700 text-white flex flex-col md:flex-row items-center justify-between gap-8 transition-colors">
+        <div ref={ctaCardRef} className="mt-20 p-8 rounded-[3rem] bg-secondary dark:bg-slate-800 border dark:border-slate-700 text-white flex flex-col md:flex-row items-center justify-between gap-8 transition-colors opacity-0">
           <div className="flex items-center gap-6">
             <div className="flex -space-x-4">
               <div className="w-14 h-14 rounded-full border-4 border-secondary dark:border-slate-800 bg-slate-300 transition-colors"></div>

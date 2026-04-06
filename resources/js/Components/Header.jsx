@@ -34,7 +34,6 @@ export default function Header() {
     { name: 'Partnership', to: '/partnership' },
     { name: 'Harga', to: '/harga' },
     { name: 'Blog', to: '/blog' },
-    { name: 'Karier', to: '/karier' },
     { name: 'Panduan', to: '/panduan' },
   ];
 
@@ -72,8 +71,8 @@ export default function Header() {
           </button>
 
           {auth.user ? (
-            <Link 
-              className="bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 transition-all duration-300 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] flex items-center gap-2" 
+            <Link
+              className="bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 transition-all duration-300 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] flex items-center gap-2"
               href="/dashboard"
             >
               <span className="material-symbols-outlined text-lg">dashboard</span>
@@ -134,12 +133,12 @@ export default function Header() {
               </Link>
             ))}
             <div className="h-px bg-slate-100 dark:border-slate-800 my-4 mx-4"></div>
-            
+
             {auth.user ? (
               <div className="px-4 pb-4">
-                <Link 
-                  href="/dashboard" 
-                  onClick={() => setIsMenuOpen(false)} 
+                <Link
+                  href="/dashboard"
+                  onClick={() => setIsMenuOpen(false)}
                   className="w-full bg-primary text-white py-5 rounded-[20px] font-black text-lg shadow-xl shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98] mt-4 flex items-center justify-center gap-3"
                 >
                   <span className="material-symbols-outlined">dashboard</span>
