@@ -22,6 +22,17 @@ class Transaction extends Model
         'xendit_invoice_url',
         'xendit_recurring_id',
         'next_billing_date',
+        'reference_id',
+        'checkout_url',
+        'payment_method',
+        'payment_bank',
+        'va_number',
+        'qr_code_url',
+        'payment_expired_at',
+    ];
+
+    protected $casts = [
+        'payment_expired_at' => 'datetime',
     ];
 
     public function getActivitylogOptions(): LogOptions

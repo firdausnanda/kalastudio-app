@@ -16,6 +16,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/socialite": "^5.25",
         "laravel/tinker": "^2.10.1",
+        "midtrans/midtrans-php": "^2.6",
         "opcodesio/log-viewer": "^3.23",
         "spatie/laravel-activitylog": "^4.12",
         "spatie/laravel-backup": "^10.0",

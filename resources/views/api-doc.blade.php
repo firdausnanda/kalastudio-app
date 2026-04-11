@@ -401,7 +401,7 @@ Accept: application/json</code></pre>
                         <span class="badge">Auth Required</span>
                     </div>
                     <h3>Create Checkout</h3>
-                    <p>Membuat invoice pembayaran via Xendit.</p>
+                    <p>Membuat token pembayaran via Midtrans Snap.</p>
                     
                     <table>
                         <thead>
@@ -423,9 +423,9 @@ Accept: application/json</code></pre>
                     <h3>Response Example</h3>
                     <pre><code>{
     "status": "success",
-    "message": "Invoice berhasil dibuat",
+    "message": "Token pembayaran berhasil dibuat",
     "data": {
-        "checkout_url": "https://checkout.xendit.co/web/..."
+        "snap_token": "8b8c5e9..."
     }
 }</code></pre>
                 </div>

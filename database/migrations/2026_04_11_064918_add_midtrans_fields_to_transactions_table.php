@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasColumn('contacts', 'type')) {
-            Schema::table('contacts', function (Blueprint $table) {
-                $table->string('type')->default('contact')->after('id');
-            });
-        }
+        Schema::table('transactions', function (Blueprint $table) {
+            $table->string('reference_id')->nullable()->after('status');
+            $table->string('checkout_url')->nullable()->after('reference_id');
+        });
     }
 
     /**
@@ -23,8 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('contacts', function (Blueprint $table) {
-            $table->dropColumn('type');
+        Schema::table('transactions', function (Blueprint $table) {
+            $table->dropColumn(['reference_id', 'checkout_url']);
         });
     }
 };

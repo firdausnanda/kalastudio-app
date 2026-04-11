@@ -42,6 +42,15 @@ class HandleInertiaRequests extends Middleware
             });
         }
 
+        $pendingTransaction = null;
+        if ($user) {
+            $pendingTransaction = \App\Models\Transaction::where('user_id', $user->id)
+                ->whereIn('status', ['pending', 'PENDING'])
+                ->with(['packagePrice.package'])
+                ->latest()
+                ->first();
+        }
+
         return [
             ...parent::share($request),
             'auth' => [
@@ -53,9 +62,12 @@ class HandleInertiaRequests extends Middleware
                 'location' => $request->url(),
             ],
             'userDataExternal' => $userDataExternal,
+            'pendingTransaction' => $pendingTransaction,
             'flash' => [
                 'success' => $request->session()->get('success'),
                 'error' => $request->session()->get('error'),
+                'warning' => $request->session()->get('warning'),
+                'info' => $request->session()->get('info'),
             ],
         ];
     }

@@ -15,6 +15,12 @@ export default function SubscriptionPage({ transactions = [], currentPackage = n
   const [isLoading, setIsLoading] = useState(true);
   const [billingCycle, setBillingCycle] = useState('monthly');
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isCancelling, setIsCancelling] = useState(false);
+  const [cancelTargetId, setCancelTargetId] = useState(null);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+
+  const pendingTransaction = transactions.find(t => t.status?.toUpperCase() === 'PENDING');
+  const hasPendingTransaction = !!pendingTransaction;
 
 
   const activePlan = plans.find(p => p.isCurrent) || (currentPackage ? {
@@ -93,6 +99,7 @@ export default function SubscriptionPage({ transactions = [], currentPackage = n
 
   const handlePlanSelect = (plan) => {
     if (plan.name.toLowerCase() === currentPlanName.toLowerCase()) return;
+    if (hasPendingTransaction) return;
     if (plan.isCustom) {
       window.location.href = 'mailto:sales@kalastudio.com';
       return;
@@ -100,6 +107,24 @@ export default function SubscriptionPage({ transactions = [], currentPackage = n
 
     const billing = billingCycle === 'annual' ? 'annual' : 'monthly';
     window.location.href = `/checkout?plan=${plan.name}&billing=${billing}`;
+  };
+
+  const handleCancelTransaction = (id) => {
+    setCancelTargetId(id);
+    setShowCancelModal(true);
+  };
+
+  const confirmCancelTransaction = () => {
+    if (!cancelTargetId) return;
+    
+    setIsCancelling(true);
+    router.post(route('payment.cancel', { transaction: cancelTargetId }), {}, {
+      onFinish: () => {
+        setIsCancelling(false);
+        setShowCancelModal(false);
+        setCancelTargetId(null);
+      }
+    });
   };
 
   const getPlanPriceDisplay = (plan) => {
@@ -138,6 +163,38 @@ export default function SubscriptionPage({ transactions = [], currentPackage = n
               <h2 className="text-3xl font-black text-slate-900 dark:text-white">Kelola Langganan</h2>
               <p className="text-slate-500 dark:text-slate-400">Pilih paket terbaik untuk pertumbuhan bisnis Anda.</p>
             </div>
+
+            {/* Pending Transaction Warning Banner */}
+            {hasPendingTransaction && (
+              <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-[32px] p-6 flex flex-col md:flex-row items-center justify-between gap-6 animate-pulse-subtle">
+                <div className="flex items-center gap-4 text-center md:text-left">
+                  <div className="w-12 h-12 bg-amber-100 dark:bg-amber-900/40 rounded-2xl flex items-center justify-center flex-shrink-0">
+                    <span className="material-symbols-outlined text-amber-600 dark:text-amber-500 text-2xl">pending_actions</span>
+                  </div>
+                  <div>
+                    <h4 className="font-black text-amber-900 dark:text-amber-400 text-sm uppercase tracking-wider">Menunggu Pembayaran</h4>
+                    <p className="text-xs font-bold text-amber-700 dark:text-amber-500/80 leading-relaxed">
+                      Selesaikan transaksi <span className="underline italic">#{pendingTransaction.reference_id || pendingTransaction.id}</span> sebelum dapat memesan paket baru.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 w-full md:w-auto">
+                    <Link 
+                      href={route('payment.pending', { transaction: pendingTransaction.id })}
+                      className="flex-1 md:flex-none px-6 py-3 bg-amber-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-amber-500/20 hover:bg-amber-600 transition-all text-center"
+                    >
+                      Bayar Sekarang
+                    </Link>
+                    <button 
+                      onClick={() => handleCancelTransaction(pendingTransaction.id)}
+                      disabled={isCancelling}
+                      className="flex-1 md:flex-none px-6 py-3 border border-amber-300 dark:border-amber-800 text-amber-700 dark:text-amber-500 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-all text-center"
+                    >
+                      {isCancelling ? 'Membatalkan...' : 'Batalkan'}
+                    </button>
+                </div>
+              </div>
+            )}
 
             {/* Current Plan Status Card */}
             <div className="bg-white dark:bg-slate-900 rounded-[32px] border border-slate-200/60 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col lg:flex-row items-stretch">
@@ -257,10 +314,10 @@ export default function SubscriptionPage({ transactions = [], currentPackage = n
 
                       <button
                         onClick={() => handlePlanSelect(plan)}
-                        disabled={isCurrent}
-                        className={`w-full py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all ${isCurrent ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed' : 'bg-primary text-white shadow-xl shadow-primary/20 hover:shadow-2xl active:scale-95'}`}
+                        disabled={isCurrent || hasPendingTransaction}
+                        className={`w-full py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all ${isCurrent || hasPendingTransaction ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed' : 'bg-primary text-white shadow-xl shadow-primary/20 hover:shadow-2xl active:scale-95'}`}
                       >
-                        {isCurrent ? 'Paket Aktif' : plan.isCustom ? 'Hubungi Kami' : `Pilih ${plan.name}`}
+                        {isCurrent ? 'Paket Aktif' : hasPendingTransaction ? 'Bereskan Pembayaran' : plan.isCustom ? 'Hubungi Kami' : `Pilih ${plan.name}`}
                       </button>
                     </div>
                   );
@@ -273,7 +330,7 @@ export default function SubscriptionPage({ transactions = [], currentPackage = n
             <div className="bg-white dark:bg-slate-900 rounded-[40px] border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none overflow-hidden">
               <div className="p-8 md:p-10 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
                 <h3 className="text-lg font-black text-slate-900 dark:text-white uppercase tracking-wider">Riwayat Pembayaran</h3>
-                <button className="text-xs font-black text-primary uppercase tracking-widest hover:underline">Download Semua PDF</button>
+                {/* <button className="text-xs font-black text-primary uppercase tracking-widest hover:underline">Download Semua PDF</button> */}
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full">
@@ -281,6 +338,8 @@ export default function SubscriptionPage({ transactions = [], currentPackage = n
                     <tr className="bg-slate-50/50 dark:bg-slate-800/30">
                       <th className="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">No. Invoice</th>
                       <th className="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Tanggal</th>
+                      <th className="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Produk</th>
+                      <th className="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Metode</th>
                       <th className="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Nominal</th>
                       <th className="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Status</th>
                       <th className="px-8 py-5 text-center text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Aksi</th>
@@ -288,41 +347,83 @@ export default function SubscriptionPage({ transactions = [], currentPackage = n
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                     {transactions.length > 0 ? (
-                      transactions.map((bill, i) => (
-                        <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                          <td className="px-8 py-5 font-black text-xs text-slate-900 dark:text-white uppercase tracking-tight">#{bill.xendit_invoice_id || bill.id}</td>
-                          <td className="px-8 py-5 font-bold text-xs text-slate-600 dark:text-slate-400">
-                            {new Date(bill.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}
-                          </td>
-                          <td className="px-8 py-5 font-black text-xs text-slate-900 dark:text-white">
-                            {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(bill.grand_total)}
-                          </td>
-                          <td className="px-8 py-5">
-                            <span className={`px-3 py-1 rounded-full text-[10px] font-black border uppercase ${bill.status === 'PAID' || bill.status === 'SETTLED'
-                              ? 'bg-green-500/10 text-green-600 border-green-500/10'
-                              : 'bg-amber-500/10 text-amber-600 border-amber-500/10'
-                              }`}>
-                              {bill.status}
-                            </span>
-                          </td>
-                          <td className="px-8 py-5 text-center">
-                            {bill.xendit_invoice_url && (
-                              <a
-                                href={bill.xendit_invoice_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center justify-center p-2 text-primary hover:bg-primary/10 rounded-xl transition-all"
-                                title="Lihat Invois"
-                              >
-                                <span className="material-symbols-outlined">launch</span>
-                              </a>
-                            )}
-                          </td>
-                        </tr>
-                      ))
+                      transactions.map((bill, i) => {
+                        const packagePrice = bill.packagePrice || bill.package_price;
+                        const packageName = packagePrice?.package?.name || 'Booster/Topup';
+                        const billingCycle = packagePrice?.billing_cycle || 'One Time';
+                        const status = bill.status?.toUpperCase();
+
+                        return (
+                          <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                            <td className="px-8 py-5 font-black text-xs text-slate-900 dark:text-white uppercase tracking-tight">#{bill.reference_id || bill.xendit_invoice_id || bill.id}</td>
+                            <td className="px-8 py-5 font-bold text-xs text-slate-600 dark:text-slate-400">
+                              {new Date(bill.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}
+                            </td>
+                            <td className="px-8 py-5">
+                              <div className="flex flex-col">
+                                <span className="font-black text-xs text-slate-900 dark:text-white uppercase">{packageName}</span>
+                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{billingCycle}</span>
+                              </div>
+                            </td>
+                            <td className="px-8 py-5">
+                              <div className="flex flex-col">
+                                <span className="font-bold text-xs text-slate-700 dark:text-slate-300 uppercase italic">
+                                  {bill.payment_method?.replace('_', ' ') || 'Belum dipilih'}
+                                </span>
+                                <span className="text-[10px] font-black text-primary uppercase tracking-widest">{bill.payment_bank || bill.va_number || '-'}</span>
+                              </div>
+                            </td>
+                            <td className="px-8 py-5 font-black text-xs text-slate-900 dark:text-white">
+                              {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(bill.grand_total)}
+                            </td>
+                            <td className="px-8 py-5">
+                              <span className={`px-3 py-1 rounded-full text-[10px] font-black border uppercase ${status === 'PAID' || status === 'SETTLED'
+                                ? 'bg-green-500/10 text-green-600 border-green-500/10'
+                                : status === 'PENDING'
+                                  ? 'bg-amber-500/10 text-amber-600 border-amber-500/10'
+                                  : status === 'CANCELLED'
+                                    ? 'bg-red-500/10 text-red-600 border-red-500/10'
+                                    : 'bg-slate-500/10 text-slate-600 border-slate-500/10'
+                                }`}>
+                                {status}
+                              </span>
+                            </td>
+                            <td className="px-8 py-5 text-center">
+                              <div className="flex items-center justify-center gap-2">
+                                {status === 'PENDING' && (
+                                  <>
+                                  <Link
+                                    href={route('payment.pending', { transaction: bill.id })}
+                                    className="px-3 py-1.5 bg-primary text-white rounded-lg text-[10px] font-black uppercase tracking-widest hover:shadow-lg hover:shadow-primary/20 transition-all whitespace-nowrap"
+                                  >
+                                    Bayar
+                                  </Link>
+                                  <button
+                                    onClick={() => handleCancelTransaction(bill.id)}
+                                    disabled={isCancelling}
+                                    className="px-3 py-1.5 border border-red-200 text-red-500 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-red-50 transition-all disabled:opacity-50"
+                                  >
+                                    Batal
+                                  </button>
+                                  </>
+                                )}
+                                {(status === 'PAID' || status === 'SETTLED') && (
+                                  <Link
+                                    href={route('langganan.invoice', { transaction: bill.id })}
+                                    className="px-3 py-1.5 border-2 border-primary/20 text-primary rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-primary/5 transition-all whitespace-nowrap flex items-center gap-1.5"
+                                  >
+                                    <span className="material-symbols-outlined text-[14px]">description</span>
+                                    Lihat Invoice
+                                  </Link>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })
                     ) : (
                       <tr>
-                        <td colSpan="5" className="px-8 py-20 text-center">
+                        <td colSpan="7" className="px-8 py-20 text-center">
                           <div className="flex flex-col items-center">
                             <span className="material-symbols-outlined text-slate-200 text-6xl mb-4">receipt_long</span>
                             <p className="text-slate-400 font-bold text-sm uppercase tracking-widest">Belum ada riwayat pembayaran</p>
@@ -417,6 +518,46 @@ export default function SubscriptionPage({ transactions = [], currentPackage = n
                 <p className="text-slate-500 font-black uppercase tracking-widest text-xs">Informasi paket tidak tersedia</p>
               </div>
             )}
+          </div>
+        </div>
+      </Modal>
+
+      {/* Custom Cancellation Confirmation Modal */}
+      <Modal show={showCancelModal} onClose={() => !isCancelling && setShowCancelModal(false)} maxWidth="md">
+        <div className="bg-white dark:bg-slate-900 p-8 text-center space-y-6">
+          <div className="w-20 h-20 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto">
+            <span className="material-symbols-outlined text-4xl text-red-500">warning</span>
+          </div>
+          
+          <div>
+            <h3 className="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight mb-2">Batalkan Pesanan?</h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+              Tindakan ini akan membatalkan transaksi Anda secara permanen. Anda perlu membuat pesanan baru jika ingin berlangganan kembali.
+            </p>
+          </div>
+
+          <div className="flex gap-3 pt-2">
+            <button
+              onClick={() => setShowCancelModal(false)}
+              disabled={isCancelling}
+              className="flex-1 py-3 text-xs font-black uppercase tracking-widest text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
+            >
+              Kembali
+            </button>
+            <button
+              onClick={confirmCancelTransaction}
+              disabled={isCancelling}
+              className="flex-1 py-3 bg-red-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-red-500/20 hover:bg-red-600 active:scale-95 transition-all flex items-center justify-center gap-2"
+            >
+              {isCancelling ? (
+                <>
+                  <span className="material-symbols-outlined text-xs animate-spin">refresh</span>
+                  Membatalkan...
+                </>
+              ) : (
+                'Ya, Batalkan'
+              )}
+            </button>
           </div>
         </div>
       </Modal>

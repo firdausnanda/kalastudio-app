@@ -29,7 +29,10 @@ Route::get('/fitur', [LandingController::class, 'fitur'])->name('fitur');
 Route::get('/harga', [LandingController::class, 'harga'])->name('harga');
 
 Route::get('/checkout', [PaymentController::class, 'checkout'])->name('payment.checkout');
+Route::get('/payment/pending/{transaction}', [PaymentController::class, 'pendingDetail'])->name('payment.pending')->middleware('auth');
 Route::post('/payment/create-invoice', [PaymentController::class, 'createInvoice'])->name('payment.invoice');
+Route::get('/payment/status/{transactionId}', [PaymentController::class, 'checkStatus'])->name('payment.status')->middleware('auth');
+Route::post('/payment/{transaction}/cancel', [PaymentController::class, 'cancelTransaction'])->name('payment.cancel')->middleware('auth');
 
 Route::get('/partnership', [LandingController::class, 'partnership'])->name('partnership');
 Route::get('/tentang', [LandingController::class, 'tentang'])->name('tentang');
@@ -74,6 +77,7 @@ Route::middleware(['auth', 'EnsureDetailsCompleted', 'CheckExternalApiToken'])->
     // Langganan
     Route::get('/langganan', [LanggananController::class, 'index'])->name('langganan.index');
     Route::get('/langganan/booster', [BoosterController::class, 'index'])->name('langganan.booster');
+    Route::get('/langganan/invoice/{transaction}', [LanggananController::class, 'invoice'])->name('langganan.invoice');
 
 
     // Integrasi

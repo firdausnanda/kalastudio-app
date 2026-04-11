@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, usePage, router } from '@inertiajs/react';
+import PaymentReminderBar from './Payment/PaymentReminderBar';
 
 export default function DashboardHeader({ isSidebarOpen, setIsSidebarOpen, userDataExternal: propUserDataExternal }) {
   const { auth, userDataExternal: sharedUserDataExternal } = usePage().props;
@@ -73,7 +74,8 @@ export default function DashboardHeader({ isSidebarOpen, setIsSidebarOpen, userD
 
   return (
     <div className="flex flex-col">
-      {auth.is_impersonating && (
+      <PaymentReminderBar />
+      {auth?.is_impersonating && (
         <div className="bg-emerald-600 text-white py-2 px-4 flex items-center justify-center gap-4 text-xs font-black uppercase tracking-widest z-[60]">
           <span className="flex items-center gap-2">
             <span className="material-symbols-outlined text-sm">visibility</span>
