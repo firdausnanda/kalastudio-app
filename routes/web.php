@@ -59,6 +59,7 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'EnsureDetailsCompleted', 'CheckExternalApiToken'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/tutorial-catat', [DashboardController::class, 'tutorialPencatatan'])->name('dashboard.tutorial-catat');
 
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
     Route::get('/transaksi/create', [TransaksiController::class, 'create'])->name('transaksi.create');

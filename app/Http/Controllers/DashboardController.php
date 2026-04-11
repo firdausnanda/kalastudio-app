@@ -47,6 +47,11 @@ class DashboardController extends Controller
         return Inertia::render('Lengkapi-Profil/Index');
     }
 
+    public function tutorialPencatatan()
+    {
+        return Inertia::render('Dashboard/Tutorial');
+    }
+
     public function storeProfil(StoreProfileRequest $request, ApiService $apiService)
     {
         $user = $request->user();

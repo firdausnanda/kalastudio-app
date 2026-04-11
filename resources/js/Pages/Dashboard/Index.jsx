@@ -357,7 +357,12 @@ export default function Dashboard({ chartDataProp, statsProp, transactionsProp }
                 <div>
                   <h4 className="text-2xl font-black mb-4">Gunakan Voice Note WhatsApp</h4>
                   <p className="text-white/80 leading-relaxed mb-6">Malas mengetik? Cukup kirim pesan suara ke nomor WhatsApp KalaStudio. AI kami akan otomatis mencatat kategori dan nominalnya.</p>
-                  <button className="bg-white text-primary px-8 py-3 rounded-xl font-bold hover:shadow-xl transition-all">Pelajari Caranya</button>
+                  <Link 
+                    href={route('dashboard.tutorial-catat')} 
+                    className="bg-white text-primary px-8 py-3 rounded-xl font-bold hover:shadow-xl transition-all inline-block"
+                  >
+                    Pelajari Caranya
+                  </Link>
                 </div>
                 <div className="flex justify-center md:justify-end">
                   <div className="w-40 h-40 bg-white/20 backdrop-blur-md rounded-[32px] flex items-center justify-center">
