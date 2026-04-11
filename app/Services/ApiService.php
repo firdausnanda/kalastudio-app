@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\Pool;
+use Log;
 
 class ApiService
 {
@@ -294,6 +295,7 @@ class ApiService
       'plan' => $plan,
     ]);
 
+    Log::info($response->json());
     return $response->json();
   }
 
@@ -307,6 +309,7 @@ class ApiService
       'jumlah' => $jumlah,
     ]);
 
+    Log::info($response->json());
     return $response->json();
   }
 
