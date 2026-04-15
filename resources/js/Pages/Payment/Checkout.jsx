@@ -28,7 +28,7 @@ export default function Checkout({ planName, billingCycle, package: pkg }) {
     // Payment State
     const [step, setStep] = useState('form'); // form, instructions, success, expired
     const [selectedMethod, setSelectedMethod] = useState('bank_transfer');
-    const [selectedBank, setSelectedBank] = useState('bca');
+    const [selectedBank, setSelectedBank] = useState('bni');
     const [paymentData, setPaymentData] = useState(null);
 
     // Pricing logic

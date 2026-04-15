@@ -91,7 +91,7 @@ class PaymentController extends Controller
             'amount' => 'required|numeric',
             'email' => 'required|email',
             'payment_method' => 'required|in:bank_transfer,qris,gopay',
-            'bank' => 'required_if:payment_method,bank_transfer|in:bca,bni,bri,mandiri',
+            'bank' => 'required_if:payment_method,bank_transfer|in:bni,bsi,bri,mandiri',
         ];
 
         // If user is not logged in, require registration fields

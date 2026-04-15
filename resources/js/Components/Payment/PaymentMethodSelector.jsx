@@ -1,8 +1,8 @@
 import React from 'react';
 
 const banks = [
-    { id: 'bca', name: 'BCA', logo: 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg' },
     { id: 'bni', name: 'BNI', logo: 'https://upload.wikimedia.org/wikipedia/commons/c/ca/Bank_BNI_Logo.png' },
+    { id: 'bsi', name: 'BSI', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a0/Bank_Syariah_Indonesia.svg' },
     { id: 'bri', name: 'BRI', logo: 'https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg' },
     { id: 'mandiri', name: 'Mandiri', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/ad/Bank_Mandiri_logo_2016.svg' },
 ];

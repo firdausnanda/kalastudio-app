@@ -14,6 +14,7 @@ export default function BankTransferInstructions({ data, onExpire }) {
     const bankLogos = {
         bca: 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg',
         bni: 'https://upload.wikimedia.org/wikipedia/commons/c/ca/Bank_BNI_Logo.png',
+        bsi: 'https://upload.wikimedia.org/wikipedia/commons/a/a0/Bank_Syariah_Indonesia.svg',
         bri: 'https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg',
         mandiri: 'https://upload.wikimedia.org/wikipedia/commons/a/ad/Bank_Mandiri_logo_2016.svg',
     };
@@ -21,6 +22,33 @@ export default function BankTransferInstructions({ data, onExpire }) {
     // Instruction content based on bank and method
     const getInstructions = () => {
         const bank = data.payment_bank;
+        if (bank === 'bsi') {
+            return {
+                atm: [
+                    'Masukkan Kartu ATM & PIN',
+                    'Pilih Menu Pembayaran / Payment',
+                    'Pilih Virtual Account',
+                    `Masukkan Nomor Virtual Account: ${data.va_number}`,
+                    'Masukkan jumlah pembayaran yang sesuai',
+                    'Konfirmasi data dan selesaikan transaksi'
+                ],
+                mobile: [
+                    'Login ke aplikasi BSI Mobile',
+                    'Pilih menu Pembayaran',
+                    'Pilih Virtual Account',
+                    `Masukkan Nomor Virtual Account: ${data.va_number}`,
+                    'Masukkan PIN BSI Mobile',
+                    'Konfirmasi dan selesaikan transaksi'
+                ],
+                internet: [
+                    'Login ke BSI Net Banking',
+                    'Pilih menu Pembayaran',
+                    'Pilih Virtual Account',
+                    `Masukkan Nomor Virtual Account: ${data.va_number}`,
+                    'Konfirmasi data dan selesaikan transaksi'
+                ]
+            };
+        }
         if (bank === 'bca') {
             return {
                 atm: [
