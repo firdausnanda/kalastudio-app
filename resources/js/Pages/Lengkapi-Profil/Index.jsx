@@ -12,6 +12,8 @@ const BUSINESS_TYPES = [
   'Teknologi & Software',
   'Pendidikan & Kursus',
   'Kesehatan & Kecantikan',
+  'Peternakan',
+  'Pertanian',
   'Properti',
   'Keperluan Pribadi',
   'Logistik & Pengiriman',
@@ -53,18 +55,18 @@ export default function LengkapiProfilPage() {
       setValidationError('Seluruh informasi wajib diisi.');
       return;
     }
-    
+
     post(route('lengkapi-profil.store'), {
-        onError: (err) => {
-            if (err.message) setValidationError(err.message);
-        }
+      onError: (err) => {
+        if (err.message) setValidationError(err.message);
+      }
     });
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950/20 font-display flex flex-col items-center justify-center px-4 py-12 transition-colors duration-300">
       <Head title="Lengkapi Profil" />
-      
+
       {/* Background decoration */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/10 dark:bg-primary/5 rounded-full blur-3xl" />
@@ -296,7 +298,8 @@ export default function LengkapiProfilPage() {
         </p>
       </div>
 
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         @keyframes bounce-subtle {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-4px); }
