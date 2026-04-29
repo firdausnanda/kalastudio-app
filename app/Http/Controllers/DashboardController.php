@@ -7,6 +7,7 @@ use App\Services\ApiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use App\TipeBisnis;
 
 class DashboardController extends Controller
 {
@@ -44,7 +45,9 @@ class DashboardController extends Controller
         if ($request->user()->business()->exists() && $request->user()->UserWhatsapp()->exists()) {
             return redirect()->route('dashboard');
         }
-        return Inertia::render('Lengkapi-Profil/Index');
+        return Inertia::render('Lengkapi-Profil/Index', [
+            'businessTypes' => TipeBisnis::all(),
+        ]);
     }
 
     public function tutorialPencatatan()

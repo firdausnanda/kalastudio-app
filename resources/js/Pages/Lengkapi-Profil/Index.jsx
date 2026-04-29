@@ -3,24 +3,7 @@ import Select from 'react-select';
 import Spinner from '@/Components/Spinner';
 import { Head, useForm } from '@inertiajs/react';
 
-const BUSINESS_TYPES = [
-  'Kuliner & Restoran',
-  'Fashion & Pakaian',
-  'Retail & Toko',
-  'Jasa & Profesional',
-  'Agency Kreatif',
-  'Teknologi & Software',
-  'Pendidikan & Kursus',
-  'Kesehatan & Kecantikan',
-  'Peternakan',
-  'Pertanian',
-  'Properti',
-  'Keperluan Pribadi',
-  'Logistik & Pengiriman',
-  'Lainnya',
-];
-
-export default function LengkapiProfilPage() {
+export default function LengkapiProfilPage({ businessTypes = [] }) {
   const [step, setStep] = useState(1);
   const { data, setData, post, processing, errors, clearErrors } = useForm({
     businessName: '',
@@ -153,7 +136,7 @@ export default function LengkapiProfilPage() {
                       <Select
                         name="businessType"
                         instanceId="businessType-select"
-                        options={BUSINESS_TYPES.map(t => ({ value: t, label: t }))}
+                        options={businessTypes.map(t => ({ value: t, label: t }))}
                         value={data.businessType ? { value: data.businessType, label: data.businessType } : null}
                         onChange={(opt) => setData('businessType', opt ? opt.value : '')}
                         placeholder="Pilih jenis usaha..."
