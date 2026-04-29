@@ -39,6 +39,7 @@ Route::get('/tentang', [LandingController::class, 'tentang'])->name('tentang');
 Route::get('/blog', [LandingController::class, 'blog'])->name('blog');
 Route::get('/blog/{slug}', [LandingController::class, 'showPost'])->name('blog.show');
 Route::get('/panduan', [LandingController::class, 'panduan'])->name('panduan');
+Route::get('/panduan-hapus-akun', [LandingController::class, 'panduanHapusAkun'])->name('panduan-hapus-akun');
 Route::get('/laporan-ai', [LandingController::class, 'laporanAI'])->name('laporan-ai');
 Route::get('/integrasi-wa', [LandingController::class, 'integrasiWA'])->name('integrasi-wa');
 Route::get('/tentang-kami', [LandingController::class, 'tentangKami'])->name('tentang-kami');

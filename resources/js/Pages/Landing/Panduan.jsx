@@ -45,25 +45,41 @@ export default function PanduanPage() {
       title: "Mulai Cepat",
       icon: "rocket_launch",
       description: "Panduan langkah demi langkah untuk mendaftarkan akun dan menghubungkan WhatsApp Anda.",
-      articles: ["Cara Daftar Akun", "Menghubungkan WhatsApp", "Pengaturan Profil Bisnis"]
+      articles: [
+        { title: "Cara Daftar Akun", href: "#" },
+        { title: "Menghubungkan WhatsApp", href: "#" },
+        { title: "Pengaturan Profil Bisnis", href: "#" }
+      ]
     },
     {
       title: "Integrasi",
       icon: "settings_input_component",
       description: "Pelajari cara menghubungkan KalaStudio dengan sistem POS, Akuntansi, dan layanan lainnya.",
-      articles: ["Integrasi API", "Webhook Setup", "Ekspor Data ke Excel"]
+      articles: [
+        { title: "Integrasi API", href: "#" },
+        { title: "Webhook Setup", href: "#" },
+        { title: "Ekspor Data ke Excel", href: "#" }
+      ]
     },
     {
       title: "Laporan Keuangan",
       icon: "payments",
       description: "Memahami cara membaca laporan laba rugi, arus kas, dan rekap harian otomatis.",
-      articles: ["Membaca Laporan AI", "Kategori Transaksi", "Rekap Voice Note"]
+      articles: [
+        { title: "Membaca Laporan AI", href: "#" },
+        { title: "Kategori Transaksi", href: "#" },
+        { title: "Rekap Voice Note", href: "#" }
+      ]
     },
     {
       title: "Keamanan & Akun",
       icon: "shield_lock",
       description: "Informasi tentang perlindungan data, manajemen staf, dan pengaturan privasi.",
-      articles: ["Reset Password", "Manajemen User Staf", "Keamanan Data WhatsApp"]
+      articles: [
+        { title: "Reset Password", href: "#" },
+        { title: "Hapus Akun", href: "/panduan-hapus-akun" },
+        { title: "Keamanan Data WhatsApp", href: "#" }
+      ]
     }
   ];
 
@@ -121,10 +137,17 @@ export default function PanduanPage() {
                       <ul className="space-y-3">
                         {cat.articles.map((article, i) => (
                           <li key={i}>
-                            <a href="#" className="text-primary font-semibold text-sm hover:underline flex items-center gap-2">
-                              <span className="material-symbols-outlined text-[18px]">description</span>
-                              {article}
-                            </a>
+                            {article.href.startsWith('/') ? (
+                              <Link href={article.href} className="text-primary font-semibold text-sm hover:underline flex items-center gap-2">
+                                <span className="material-symbols-outlined text-[18px]">description</span>
+                                {article.title}
+                              </Link>
+                            ) : (
+                              <a href={article.href} className="text-primary font-semibold text-sm hover:underline flex items-center gap-2">
+                                <span className="material-symbols-outlined text-[18px]">description</span>
+                                {article.title}
+                              </a>
+                            )}
                           </li>
                         ))}
                       </ul>

@@ -80,6 +80,11 @@ class LandingController extends Controller
         return Inertia::render('Landing/Panduan');
     }
 
+    public function panduanHapusAkun()
+    {
+        return Inertia::render('Landing/PanduanHapusAkun');
+    }
+
     public function laporanAI()
     {
         return Inertia::render('Landing/Laporan-AI');
